@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .bg-grid-slate-100 {
+    background-image: linear-gradient(to right, #f1f5f910 1px, transparent 1px),
+      linear-gradient(to bottom, #f1f5f910 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
