@@ -6,24 +6,76 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-5px)' },
+          '20%, 40%, 60%, 80%': { transform: 'translateX(5px)' },
+        },
+      },
+      animation: {
+        shake: 'shake 0.5s ease-in-out',
+      },
       colors: {
         primary: {
-          50:  '#F6FFFA',  // faint mint hint
-          100: '#E4FDF2',  // whisper mint
-          200: '#C7F9E5',  // pastel mint
-          300: '#A8F4D7',  // soft mint
-          400: '#89EFC8',  // gentle mint
-          DEFAULT:'#6CE8BA', // base subtle mint
-          500: '#6CE8BA',  // base subtle mint
-          600: '#55D4A6',  // slightly darker mint
-          700: '#43B68C',  // mid‑dark mint
-          800: '#348C6D',  // deep mint
-          900: '#285E4D',  // forest‑mint
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+        },
+        guaco: {
+          primary: '#6CC785',
+          secondary: '#F8F6F1',
+          accent: '#FF7F6D',
+          'dark-gray': '#333333',
+          'light-gray': '#E0E0E0',
+        },
+        emerald: {
+          50: '#F0FDF4',
+          100: '#DCFCE7',
+          200: '#BBF7D0',
+          300: '#86EFAC',
+          400: '#4ADE80',
+          500: '#10B981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065F46',
+          900: '#064E40',
+        },
+        amber: {
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          200: '#FDE68A',
+          300: '#FCD34D',
+          400: '#FBBF24',
+          500: '#F59E0B',
+          600: '#D97706',
+          700: '#B45309',
+          800: '#92400E',
+          900: '#78350F',
+        },
+        sky: {
+          50: '#F0F9FF',
+          100: '#E0F2FE',
+          200: '#BAE6FD',
+          300: '#7DD3FC',
+          400: '#38BDF8',
+          500: '#0EA5E9',
+          600: '#0284C7',
+          700: '#0369A1',
+          800: '#075985',
+          900: '#0C4A6E',
         },
       },
     },
     fontFamily: {
-      sans: ['Inter', 'sans-serif'],
+      sans: ['Manrope', 'Inter', 'sans-serif'],
     },
   },
   plugins: [],

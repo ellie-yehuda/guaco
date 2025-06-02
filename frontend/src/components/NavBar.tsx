@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HomeIcon, ClipboardDocumentListIcon, ShoppingCartIcon, BookOpenIcon } from '@heroicons/react/24/outline';
-import avo_pic from "/src/assets/images/avo_profile.png";
+// @ts-ignore
+import avo_pic from "../assets/images/avo_profile.png";
 
 export default function NavBar() {
   const navigate = useNavigate();

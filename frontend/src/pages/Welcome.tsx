@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import avo_pic from "/src/assets/images/avo_profile.png";
+import avo_pic from "/src/assets/images/guacoo.png";
 
 export default function Welcome() {
   const navigate = useNavigate();
@@ -50,85 +50,165 @@ export default function Welcome() {
   // ────────────────────────────────
   return (
     <motion.div
-      className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 via-white to-primary-100 px-6 py-16 overflow-hidden text-gray-800"
+      className="min-h-screen flex flex-col items-center justify-center bg-guaco-secondary px-6 py-8 text-guaco-dark-gray overflow-hidden relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      {/* Decorative blobs */}
+      {/* Decorative blobs - updated with new color palette */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-72 h-72 rounded-full bg-primary-200 mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
-        <div className="absolute -bottom-32 -right-32 w-72 h-72 rounded-full bg-primary-300 mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
-        <div className="absolute top-1/3 right-1/4 w-64 h-64 rounded-full bg-primary-400 mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000" />
+        <div className="absolute -top-32 -left-32 w-72 h-72 rounded-full bg-guaco-primary mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
+        <div className="absolute -bottom-32 -right-32 w-72 h-72 rounded-full bg-guaco-accent mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
+        <div className="absolute top-1/3 right-1/4 w-64 h-64 rounded-full bg-guaco-primary mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000" />
       </div>
 
+      {/* Hero Section */}
       <motion.div
-        className="relative z-10 w-full max-w-md bg-white/60 backdrop-blur-xl shadow-2xl rounded-3xl p-8 flex flex-col items-center"
-        initial={{ y: -40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
+        className="relative z-10 w-full max-w-7xl text-center flex flex-col items-center py-8 px-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        {/* Avocado emoji badge */}
-        <div className="absolute -top-14 left-1/2 -translate-x-1/2">
-          <div className="w-24 h-24 flex items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-200 shadow-lg border-4 border-primary-600">
-            <img src={avo_pic} alt="Avocado" className="w-24 h-24 rounded-full" />
-          </div>
-        </div>
+        {/* Avocado Illustration with animation */}
+        <motion.div
+          className="mb-8"
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{
+            scale: 1,
+            opacity: 1,
+            y: [0, -10],
+            rotate: [0, 5],
+          }}
+          transition={{ type: "spring", stiffness: 150, damping: 10, delay: 0.2, repeat: Infinity, repeatType: "reverse", duration: 2 }}
+          whileHover={{ scale: 1.05, rotate: 10 }}
+        >
+          <img
+            src={avo_pic}
+            alt="Friendly Avocado Illustration"
+            className="w-48 h-48 md:w-64 md:h-64 drop-shadow-lg"
+          />
+        </motion.div>
 
-        <div className="mt-10 w-full text-center space-y-4">
-          <h1 className="text-3xl font-extrabold tracking-tight">
-            {isReturning ? `Welcome back, ${userName}!` : "Welcome to Plateful"}
-          </h1>
+        {/* Headline */}
+        <motion.h1
+          className="text-5xl md:text-6xl font-extrabold text-guaco-dark-gray leading-tight mb-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
+        >
+          {isReturning ? `Welcome back, ${userName}!` : "Your Wellness Journey Starts Here"}
+        </motion.h1>
 
-          <p className="…">
-  {isReturning
-    ? "Let's pick up where you left off."
-    : (
-        <>
-          I'm Guaco! Your wellness buddy 😊<br/>
-          How should I call you?
-        </>
-      )
-  }
-</p>
+        {/* Subheading */}
+        <motion.p
+          className="text-xl md:text-2xl text-gray-600 max-w-2xl mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
+        >
+          {isReturning
+            ? "Let's pick up where you left off."
+            : "Guaco helps you track your meals, set goals, and live a healthier, happier life."}
+        </motion.p>
 
+        {/* Name input for new users */}
+        {!isReturning && (
+          <motion.input
+            type="text"
+            placeholder="How should I call you?"
+            value={userName}
+            onChange={(e) =>
+              setUserName(e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1))
+            }
+            className="mt-6 w-full max-w-sm rounded-full border border-guaco-light-gray px-4 py-3 text-center text-lg shadow-sm placeholder-gray-400 focus:border-guaco-primary focus:outline-none focus:ring-2 focus:ring-guaco-primary"
+            autoFocus
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.7, ease: "easeOut" }}
+          />
+        )}
 
-          {!isReturning && (
-            <input
-              type="text"
-              placeholder="Name"
-              value={userName}
-              onChange={(e) =>
-                setUserName(e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1))
-              }
-              className="mt-6 w-full rounded-full border border-gray-300 px-4 py-3 text-center text-lg shadow-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
-              autoFocus
-            />
-          )}
-        </div>
+        {/* Call-to-Action Button */}
+        <motion.button
+          onClick={saveAndContinue}
+          disabled={!isReturning && userName.trim().length <= 1}
+          className="px-10 py-4 bg-guaco-accent text-white text-lg font-semibold rounded-full shadow-lg hover:bg-guaco-primary transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-guaco-accent/50 mt-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.8, ease: "easeOut" }}
+        >
+          {isReturning ? "Continue →" : "Get Started →"}
+        </motion.button>
 
-        <div className="mt-8 w-full flex flex-col items-center gap-3">
-          <button
-            onClick={saveAndContinue}
-            disabled={!isReturning && userName.trim().length <= 1}
-            className="w-full rounded-full bg-gradient-to-r from-primary-500 to-primary-400 px-8 py-4 text-lg font-medium text-white shadow-lg transition-all duration-300 hover:from-primary-600 hover:to-primary-500 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
+        {isReturning && (
+          <motion.button
+            onClick={reset}
+            className="text-sm text-gray-500 underline hover:text-guaco-primary mt-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
           >
-            {isReturning ? "Continue →" : "Start →"}
-          </button>
-
-          {isReturning && (
-            <button onClick={reset} className="text-sm text-gray-500 underline hover:text-primary-600">
-              Delete user
-            </button>
-          )}
-        </div>
+            Delete user
+          </motion.button>
+        )}
       </motion.div>
+
+      {/* Feature Highlight Section */}
+      <div className="relative z-10 w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 px-4">
+        {/* Feature Card 1 */}
+        <motion.div
+          className="bg-white/60 backdrop-blur-md rounded-2xl p-6 text-center shadow-xl border border-guaco-light-gray"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1, ease: "easeOut" }}
+        >
+          <div className="text-guaco-primary text-5xl mb-4">
+            <span role="img" aria-label="Tracking">
+              📊
+            </span>
+          </div>
+          <h3 className="text-xl font-bold text-guaco-dark-gray mb-2">Smart Tracking</h3>
+          <p className="text-gray-700">Effortlessly log your meals and monitor your progress.</p>
+        </motion.div>
+
+        {/* Feature Card 2 */}
+        <motion.div
+          className="bg-white/60 backdrop-blur-md rounded-2xl p-6 text-center shadow-xl border border-guaco-light-gray"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.2, ease: "easeOut" }}
+        >
+          <div className="text-guaco-primary text-5xl mb-4">
+            <span role="img" aria-label="Goals">
+              🎯
+            </span>
+          </div>
+          <h3 className="text-xl font-bold text-guaco-dark-gray mb-2">Personalized Goals</h3>
+          <p className="text-gray-700">Set and achieve your health objectives with personalized guidance.</p>
+        </motion.div>
+
+        {/* Feature Card 3 */}
+        <motion.div
+          className="bg-white/60 backdrop-blur-md rounded-2xl p-6 text-center shadow-xl border border-guaco-light-gray"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.4, ease: "easeOut" }}
+        >
+          <div className="text-guaco-primary text-5xl mb-4">
+            <span role="img" aria-label="Community">
+              🤝
+            </span>
+          </div>
+          <h3 className="text-xl font-bold text-guaco-dark-gray mb-2">Supportive Community</h3>
+          <p className="text-gray-700">Connect with others and share your journey.</p>
+        </motion.div>
+      </div>
 
       <motion.p
         className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-gray-500"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.7 }}
+        transition={{ duration: 0.6, delay: 1.6 }}
       >
         Built with 🪄 GenAI
       </motion.p>

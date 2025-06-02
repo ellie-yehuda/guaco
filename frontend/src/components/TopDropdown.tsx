@@ -3,7 +3,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { UserIcon, UsersIcon, Bars3Icon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
 import { useNavigate } from 'react-router-dom'
 
-function classNames(...classes) {
+function classNames(...classes: (string | boolean | undefined | null)[]) {
   return classes.filter(Boolean).join(' ')
 }
 

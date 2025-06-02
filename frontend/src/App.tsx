@@ -5,12 +5,8 @@ import Onboarding from "./pages/Onboarding";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import GroceryList from "./pages/GroceryList";
-// Assuming GetStarted, Tracker, Recipes, Friends pages exist
-// import GetStarted from "./pages/GetStarted";
-// import Tracker from "./pages/Tracker";
-// import Recipes from "./pages/Recipes";
-// import Friends from "./pages/Friends";
-
+import Recipes from "./pages/Recipes";
+import Tracker from "./pages/Tracker";
 export default function App() {
   return (
     <Router>
@@ -22,11 +18,8 @@ export default function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/grocery" element={<GroceryList />} />
-          {/* Add other routes that need the NavBar here */}
-          {/* <Route path="/get-started" element={<GetStarted />} /> */}
-          {/* <Route path="/tracker" element={<Tracker />} /> */}
-          {/* <Route path="/recipes" element={<Recipes />} /> */}
-          {/* <Route path="/friends" element={<Friends />} /> */}
+          <Route path="/recipes" element={<Recipes />} />
+          <Route path="/tracker" element={<Tracker />} />
         </Route>
       </Routes>
     </Router>
