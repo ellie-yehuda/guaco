@@ -37,16 +37,16 @@ export default function NavBar() {
   const rightTabs = tabs.slice(2);
 
   return (
-    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4">
-      <div className="flex justify-between items-center bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl px-6 py-2 border border-primary-100">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 w-full bg-white shadow-lg pt-2 pb-4 px-4">
+      <div className="flex justify-around items-center h-full">
         {/* Left tabs */}
         {leftTabs.map(tab => (
           <button
             key={tab.name}
             onClick={() => navigate(tab.route)}
-            className={`flex flex-col items-center flex-1 py-2 px-3 transition ${location.pathname === tab.route ? 'text-primary-600' : 'text-gray-400 hover:text-primary-500'}`}
+            className={`flex flex-col items-center flex-1 py-1 px-2 rounded-lg transition-all duration-300 ${location.pathname === tab.route ? 'bg-primary-100 text-primary-600' : 'text-gray-400 hover:text-primary-500'}`}
           >
-            <tab.icon className="w-7 h-7 mb-1" />
+            <tab.icon className="w-6 h-6 mb-1" />
             <span className="text-xs font-medium whitespace-nowrap">{tab.name}</span>
           </button>
         ))}
@@ -54,10 +54,9 @@ export default function NavBar() {
         {/* Avocado tab (center, big, floating) */}
         <button
           onClick={() => navigate('/home')}
-          className="relative z-10 flex flex-col items-center justify-center"
-          style={{ minWidth: 72 }}
+          className="relative z-10 flex flex-col items-center justify-center mx-4 group"
         >
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-200 shadow-lg border-4 border-primary-600 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-200 shadow-lg border-4 border-white flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:shadow-xl">
             <img src={avo_pic} alt="Avocado" className="w-14 h-14 rounded-full" />
           </div>
         </button>
@@ -67,9 +66,9 @@ export default function NavBar() {
           <button
             key={tab.name}
             onClick={() => navigate(tab.route)}
-            className={`flex flex-col items-center flex-1 py-2 px-3 transition ${location.pathname === tab.route ? 'text-primary-600' : 'text-gray-400 hover:text-primary-500'}`}
+            className={`flex flex-col items-center flex-1 py-1 px-2 rounded-lg transition-all duration-300 ${location.pathname === tab.route ? 'bg-primary-100 text-primary-600' : 'text-gray-400 hover:text-primary-500'}`}
           >
-            <tab.icon className="w-7 h-7 mb-1" />
+            <tab.icon className="w-6 h-6 mb-1" />
             <span className="text-xs font-medium whitespace-nowrap">{tab.name}</span>
           </button>
         ))}

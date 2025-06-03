@@ -72,6 +72,7 @@ export default {
           800: '#075985',
           900: '#0C4A6E',
         },
+        'wellness-mint': '#98FF98',
       },
     },
     fontFamily: {

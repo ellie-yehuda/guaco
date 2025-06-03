@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { FireIcon, TrophyIcon, StarIcon, UserCircleIcon, SparklesIcon, CalendarDaysIcon, BoltIcon } from "@heroicons/react/24/solid";
 import useUser from "../hooks/useUser";

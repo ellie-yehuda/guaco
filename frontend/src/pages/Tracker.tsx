@@ -1,84 +1,117 @@
-import React, { useState } from "react";
-import { Card } from "../components/ui/Card";
-import TrackFoodModal from "../components/TrackFoodModal";
-import TrackWaterModal from "../components/TrackWaterModal";
-import TrackSleepModal from "../components/TrackSleepModal";
-import TrackExerciseModal from "../components/TrackExerciseModal";
+import Navigation from "@/components/NavBar";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Apple, Droplets, Moon, Activity } from "lucide-react";
+import { useState } from "react";
+import FoodTrackingModal from "@/components/TrackFoodModal";
+import WaterTrackingModal from "@/components/TrackWaterModal";
+import SleepTrackingModal from "@/components/TrackSleepModal";
+import ExerciseTrackingModal from "@/components/TrackExerciseModal";
 
-const cardData = [
-  {
-    key: "food",
-    label: "Food",
-    icon: (
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-rose-200">
-        {/* Food icon (fork & knife) */}
-        <svg className="w-6 h-6 text-rose-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 3v7a2 2 0 002 2h0a2 2 0 002-2V3m0 0v7a2 2 0 002 2h0a2 2 0 002-2V3m0 0v7a2 2 0 002 2h0a2 2 0 002-2V3" /></svg>
-      </span>
-    ),
-    bg: "bg-rose-50",
-  },
-  {
-    key: "water",
-    label: "Water",
-    icon: (
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-sky-200">
-        {/* Water icon (droplet) */}
-        <svg className="w-6 h-6 text-sky-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3.25C12 3.25 7 9.25 7 13a5 5 0 0010 0c0-3.75-5-9.75-5-9.75z" /></svg>
-      </span>
-    ),
-    bg: "bg-sky-50",
-  },
-  {
-    key: "sleep",
-    label: "Sleep",
-    icon: (
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-200">
-        {/* Sleep icon (moon) */}
-        <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z" /></svg>
-      </span>
-    ),
-    bg: "bg-indigo-50",
-  },
-  {
-    key: "exercise",
-    label: "Exercise",
-    icon: (
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-200">
-        {/* Exercise icon (dumbbell) */}
-        <svg className="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6.5 6.5l11 11m-11 0l11-11" /></svg>
-      </span>
-    ),
-    bg: "bg-emerald-50",
-  },
-];
+const Track = () => {
+  const [activeModal, setActiveModal] = useState<string | null>(null);
 
-type ModalKey = "food" | "water" | "sleep" | "exercise" | null;
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 18) return "Good Afternoon";
+    return "Good Evening";
+  };
 
-export default function Tracker() {
-  const [openModal, setOpenModal] = useState<ModalKey>(null);
+  const greeting = getGreeting();
+
+  const trackingButtons = [
+    {
+      icon: Apple,
+      title: "Food",
+      description: "Log your meals and snacks",
+      color: "bg-red-500 text-white",
+      bgColor: "bg-red-50",
+      action: () => setActiveModal("food")
+    },
+    {
+      icon: Droplets,
+      title: "Water",
+      description: "Track your hydration",
+      color: "bg-blue-500 text-white",
+      bgColor: "bg-blue-50",
+      action: () => setActiveModal("water")
+    },
+    {
+      icon: Moon,
+      title: "Sleep",
+      description: "Log your sleep hours",
+      color: "bg-purple-500 text-white",
+      bgColor: "bg-purple-50",
+      action: () => setActiveModal("sleep")
+    },
+    {
+      icon: Activity,
+      title: "Exercise",
+      description: "Record your workouts",
+      color: "bg-green-500 text-white",
+      bgColor: "bg-green-50",
+      action: () => setActiveModal("exercise")
+    }
+  ];
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-2">Track Progress</h1>
-      <p className="text-gray-500 mb-8">Log your daily food, water, sleep, and exercise to stay on track.</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {cardData.map(card => (
-          <Card
-            key={card.key}
-            className={`${card.bg} shadow-lg rounded-xl cursor-pointer transition-transform hover:scale-105`}
-            onClick={() => setOpenModal(card.key as ModalKey)}
-          >
-            <div className="flex items-center space-x-4 p-6">
-              {card.icon}
-              <span className="text-lg font-semibold">{card.label}</span>
-            </div>
-          </Card>
-        ))}
+    <div className="min-h-screen pb-20 bg-gradient-to-br from-white to-blue-50">
+      {/* Header */}
+      <div className="p-6 pt-10">
+        <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-wellness-mint to-teal-400 mb-2">
+          {greeting}, User!
+        </h1>
+        <p className="text-lg text-gray-700 mt-2">Ready to log your progress?</p>
       </div>
-      <TrackFoodModal open={openModal === "food"} setOpen={(open: boolean) => setOpenModal(open ? "food" : null)} />
-      <TrackWaterModal open={openModal === "water"} setOpen={(open: boolean) => setOpenModal(open ? "water" : null)} />
-      <TrackSleepModal open={openModal === "sleep"} setOpen={(open: boolean) => setOpenModal(open ? "sleep" : null)} />
-      <TrackExerciseModal open={openModal === "exercise"} setOpen={(open: boolean) => setOpenModal(open ? "exercise" : null)} />
+
+      {/* 2x2 Grid of Tracking Buttons */}
+      <div className="px-6 max-w-md mx-auto py-4">
+        <div className="grid grid-cols-2 gap-4">
+          {trackingButtons.map((button, index) => {
+            const Icon = button.icon;
+            return (
+              <Card
+                key={index}
+                className={`p-6 ${button.bgColor} border rounded-lg shadow-md hover:scale-105 transition-transform cursor-pointer`}
+                onClick={button.action}
+              >
+                <div className="flex flex-col items-center text-center space-y-3">
+                  <div className={`p-3 rounded-full ${button.color}`}>
+                    <Icon size={24} />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">{button.title}</h3>
+                    <p className="text-gray-600 text-sm">{button.description}</p>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Modals */}
+      <FoodTrackingModal 
+        open={activeModal === "food"} 
+        setOpen={() => setActiveModal(null)} 
+      />
+      <WaterTrackingModal 
+        open={activeModal === "water"} 
+        setOpen={() => setActiveModal(null)} 
+      />
+      <SleepTrackingModal 
+        open={activeModal === "sleep"} 
+        setOpen={() => setActiveModal(null)} 
+      />
+      <ExerciseTrackingModal 
+        open={activeModal === "exercise"} 
+        setOpen={() => setActiveModal(null)} 
+      />
+
+      <Navigation />
     </div>
   );
-}
+};
+
+export default Track;
