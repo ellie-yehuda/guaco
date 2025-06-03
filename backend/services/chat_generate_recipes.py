@@ -13,67 +13,97 @@ client = OpenAI(
 # @param ingredients: list of ingredients
 # @return recipe: recipe
 def generate_recipe_from_ingredients(ingredients):
-    # Join the Python list into a comma-separated string for readability
     ingredients_list = ", ".join(ingredients)
     
     prompt = f"""
-You are Guaco’s expert recipe engine. The user will supply a list of ingredients; your job is to output a fully realistic, easy-to-follow recipe that someone can actually cook at home. Follow these rules exactly:
+You are Guaco's expert recipe engine and nutritionist. Generate a recipe following this EXACT format:
 
-1. Use **only** the provided ingredients plus basic pantry items (salt, pepper, oil, water, sugar,butter,etc). Do not add any other spices, vegetables, sauces, or extras.
-2. Include realistic quantities for each ingredient (for example, “200 g tofu,” “2 cups spinach,” “1 medium tomato”). 
-3. Provide:
-   • **Title**  
-   • **Prep Time:** (in minutes)  
-   • **Cook Time:** (in minutes)  
-   • **Ingredients:** a bullet-list with each item and its quantity  
-   • **Instructions:** step-by-step directions numbered clearly so a home cook can follow without guessing  
-4. If you know of an actual, established recipe that uses exactly these ingredients (plus salt, pepper, oil, water, etc), output that recipe.  
-5. If no real recipe exists with exactly those ingredients, then output a recipe that is as close as possible. In that case:
-   • Identify the recipe you’re adapting (e.g., “This is an adaptation of X recipe.”).  
-   • Note any slight substitutions you’re forced to make (for example, “In the original recipe they used soy sauce; here we omit it because it’s not in the ingredient list, but we compensate by adding a pinch of salt.”).  
-6. Do **not** output anything other than the requested recipe fields (title, times, ingredient list, instructions). No extra commentary or explanation.
+Title: [Recipe Name]
 
-**Template:**  
-Title: <Recipe Name>  
-Prep Time: <minutes>  
-Cook Time: <minutes>  
-Ingredients:  
-• <quantity> <ingredient>  
-• <quantity> <ingredient>  
-…  
-Instructions:  
-1. <First step>  
-2. <Next step>  
-…
+Prep Time: [X] minutes
+Cook Time: [Y] minutes
+Servings: [Z]
 
-**Example prompt input (for you to replace with actual values):**  
-Ingredients: [“spinach”, “tomato”, “tofu”]
+Ingredients:
+• [ingredient 1 with quantity]
+• [ingredient 2 with quantity]
+[etc...]
 
-**Example expected output:**  
-Title: Lemon-Garlic Tofu & Spinach Skillet  
-Prep Time: 10 minutes  
-Cook Time: 15 minutes  
-Ingredients:  
-• 200 g firm tofu, cubed  
-• 2 cups fresh spinach, roughly chopped  
-• 1 medium tomato, diced  
-• 1 tbsp olive oil  
-• ½ tsp salt  
-• ¼ tsp black pepper  
-• 2 tbsp water  
-Instructions:  
-1. Heat 1 tbsp olive oil in a nonstick skillet over medium heat.  
-2. Add cubed tofu; season with ½ tsp salt and ¼ tsp black pepper. Sauté for 5 minutes, turning occasionally until lightly golden.  
-3. Add diced tomato and cook for 2 more minutes until it softens.  
-4. Stir in chopped spinach and 2 tbsp water. Cover for 2 minutes, until spinach wilts.  
-5. Uncover, stir gently, and serve hot.
+Spices & Seasonings:
+• [spice/seasoning 1 with quantity]
+• [spice/seasoning 2 with quantity]
+[etc...]
+
+Instructions:
+1. [Step 1]
+2. [Step 2]
+[etc...]
+
+Basic Nutrition (per serving):
+• Calories: [kcal]
+• Protein: [g]
+• Total Carbs: [g]
+• Fiber: [g]
+• Total Fat: [g]
+
+---Detailed Nutrition Facts---
+[Only include this section - it will be hidden by default]
+
+Fats:
+• Saturated Fat: [g]
+• Monounsaturated Fat: [g]
+• Polyunsaturated Fat: [g]
+• Trans Fat: [g]
+• Cholesterol: [mg]
+
+Sugars:
+• Total Sugars: [g]
+• Added Sugars: [g]
+
+Minerals:
+• Sodium: [mg]
+• Potassium: [mg]
+• Calcium: [mg]
+• Iron: [mg]
+• Magnesium: [mg]
+• Zinc: [mg]
+• Selenium: [mcg]
+
+Vitamins:
+• Vitamin A: [IU]
+• Vitamin C: [mg]
+• Vitamin D: [IU]
+• Vitamin E: [mg]
+• Vitamin K: [mcg]
+• Thiamin (B1): [mg]
+• Riboflavin (B2): [mg]
+• Niacin (B3): [mg]
+• Vitamin B6: [mg]
+• Folate: [mcg]
+• Vitamin B12: [mcg]
+
+Rules:
+1. Use ONLY the provided ingredients plus basic pantry items (salt, pepper, oil, water, etc).
+2. Include realistic quantities for all ingredients.
+3. Separate main ingredients from spices/seasonings.
+4. Use USDA database values for nutrition calculations.
+5. Consider cooking method effects on nutrition.
+6. Round appropriately:
+   - Calories to whole numbers
+   - Macros to 0.1g
+   - Vitamins/minerals to appropriate units
+7. Include serving size and number of servings.
 
 Now generate a recipe using exactly these ingredients: {ingredients_list}
-
 """
+    
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt.strip()}]
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a professional chef and certified nutritionist with expertise in detailed nutritional analysis."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.7,
     )
-    print(response.choices[0].message.content)
+    
     return response.choices[0].message.content
