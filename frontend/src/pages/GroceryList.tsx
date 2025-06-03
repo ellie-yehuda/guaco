@@ -22,8 +22,8 @@ import {
 
 /* --------------------------- 1. Data sources ------------------------------ */
 
-// 🌟 The tiny lookup file we generated.  { "hummus": "Pantry", ... }
-import categoryDict from "@/data/categoryMap.json";
+// 🌟 The tiny lookup file we generated.  { "hummus": "Pantry", ... } 
+import categoryDict from "../backend/data/GroceryDataset/GroceryDataset4Guaco.csv";
 
 // Turn the keys into an array once; reuse for autocomplete.
 const ALL_FOOD_NAMES = Object.keys(categoryDict) as string[];
