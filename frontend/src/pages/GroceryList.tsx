@@ -10,6 +10,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import NavBar from "../components/NavBar";
+import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import {
   PlusIcon,
   TrashIcon,
@@ -24,15 +25,19 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate } from 'react-router-dom';
+import DetailedNutrition from '../components/DetailedNutrition';
+import RecipeLoader from '../components/RecipeLoader';
+import { Recipe } from '../types/Recipe';
 
 /* --------------------------- 1. Data sources ------------------------------ */
-import { getCategory, getAllFoodItems } from "../utils/categoryUtils";
+import { getCategory, getAllFoodItems, getSuggestions } from "../utils/categoryUtils";
 
 /* --------------------------- 2. Types ------------------------------------ */
 type GroceryItem = {
   id: number;
   name: string;
   quantity: number;
+  quantity_unit : string;
   purchased: boolean;
   category: string;
 };
@@ -44,55 +49,6 @@ type CategoryAction = {
   selectedCount: number;
   isSelecting: boolean;
   items: GroceryItem[];
-};
-
-type Macros = {
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-};
-
-type Recipe = {
-  title: string;
-  summary: string;
-  instructions: string;
-  servings: number;
-  prepTime: string;
-  cookTime: string;
-  nutrition: {
-    calories: number;
-    protein: number;
-    total_carbs: number;
-    net_carbs: number;
-    fiber: number;
-    total_fat: number;
-    saturated_fat: number;
-    monounsaturated_fat: number;
-    polyunsaturated_fat: number;
-    trans_fat: number;
-    cholesterol: number;
-    total_sugars: number;
-    added_sugars: number;
-    sodium: number;
-    potassium: number;
-    calcium: number;
-    iron: number;
-    magnesium: number;
-    zinc: number;
-    selenium: number;
-    vitamin_a: number;
-    vitamin_c: number;
-    vitamin_d: number;
-    vitamin_e: number;
-    thiamin: number;
-    riboflavin: number;
-    niacin: number;
-    vitamin_b6: number;
-    vitamin_b12: number;
-    vitamin_k: number;
-    folate: number;
-  };
 };
 
 /* --------------------------- 3. Helpers ---------------------------------- */
@@ -250,6 +206,9 @@ export default function GroceryList() {
   const [isSaveRecipeModalOpen, setSaveRecipeModalOpen] = useState(false);
   const [recipeToSave, setRecipeToSave] = useState<Recipe | null>(null);
   const [showDetailedNutrition, setShowDetailedNutrition] = useState(false);
+  const [newUnit, setNewUnit] = useState("units");
+  const unitOptions = ["units", "g", "ml", "oz", "lb", "kg", "liters", "units", "package", "6 pack", "dozen"];
+  const [isGeneratingRecipe, setIsGeneratingRecipe] = useState(false);
 
   const recipeCategories = [
     { id: 'breakfast', name: 'Breakfast', icon: '🍳' },
@@ -298,88 +257,67 @@ export default function GroceryList() {
       return;
     }
 
+    setIsGeneratingRecipe(true);
+
     const ingredientsToGenerate = items
       .filter((item) => selectedItemIds.includes(item.id))
       .map((item) => item.name);
+
+    console.log("Generating recipe with ingredients:", ingredientsToGenerate);
 
     try {
       const response = await fetch("http://localhost:8000/api/generate_recipe_from_ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
         },
+        mode: "cors",
+        credentials: "include",
         body: JSON.stringify({ ingredients: ingredientsToGenerate }),
       });
+      
+      console.log("Response status:", response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
+        throw new Error(`Failed to generate recipe: ${errorText}`);
+      }
+      
       const data = await response.json();
-      const recipeText = data.message;
-
-      // Parse recipe sections
-      const [mainContent, detailedNutrition] = recipeText.split('---Detailed Nutrition Facts---');
+      console.log("Recipe data received:", data);
       
-      // Parse basic information
-      const titleMatch = mainContent.match(/Title: (.*?)\n/);
-      const prepTimeMatch = mainContent.match(/Prep Time: (\d+) minutes/);
-      const cookTimeMatch = mainContent.match(/Cook Time: (\d+) minutes/);
-      const servingsMatch = mainContent.match(/Servings: (\d+)/);
+      if (data.error) {
+        throw new Error(data.error);
+      }
       
-      // Parse basic nutrition
-      const nutritionSection = mainContent.match(/Basic Nutrition \(per serving\):\n([^]*?)(?=\n\n|$)/);
-      const calories = nutritionSection?.[1].match(/Calories: (\d+)/)?.[1];
-      const protein = nutritionSection?.[1].match(/Protein: ([\d.]+)g/)?.[1];
-      const totalCarbs = nutritionSection?.[1].match(/Total Carbs: ([\d.]+)g/)?.[1];
-      const fiber = nutritionSection?.[1].match(/Fiber: ([\d.]+)g/)?.[1];
-      const totalFat = nutritionSection?.[1].match(/Total Fat: ([\d.]+)g/)?.[1];
-
-      // Create recipe object
-      setRecipeToSave({
-        title: titleMatch?.[1] || 'Generated Recipe',
+      // Create recipe object from response
+      const recipeData = {
+        title: data.title || 'Generated Recipe',
         summary: `Recipe generated from: ${ingredientsToGenerate.join(', ')}`,
-        instructions: mainContent,
-        prepTime: `${prepTimeMatch?.[1] || '15'}`,
-        cookTime: `${cookTimeMatch?.[1] || '20'}`,
-        servings: parseInt(servingsMatch?.[1] || '4'),
-        nutrition: {
-          calories: parseInt(calories || '0'),
-          protein: parseFloat(protein || '0'),
-          total_carbs: parseFloat(totalCarbs || '0'),
-          net_carbs: parseFloat(totalCarbs || '0') - parseFloat(fiber || '0'),
-          fiber: parseFloat(fiber || '0'),
-          total_fat: parseFloat(totalFat || '0'),
-          // ... rest of nutrition fields with default values ...
-          saturated_fat: 0,
-          monounsaturated_fat: 0,
-          polyunsaturated_fat: 0,
-          trans_fat: 0,
-          cholesterol: 0,
-          total_sugars: 0,
-          added_sugars: 0,
-          sodium: 0,
-          potassium: 0,
-          calcium: 0,
-          iron: 0,
-          magnesium: 0,
-          zinc: 0,
-          selenium: 0,
-          vitamin_a: 0,
-          vitamin_c: 0,
-          vitamin_d: 0,
-          vitamin_e: 0,
-          thiamin: 0,
-          riboflavin: 0,
-          niacin: 0,
-          vitamin_b6: 0,
-          vitamin_b12: 0,
-          vitamin_k: 0,
-          folate: 0
-        }
-      });
+        instructions: data.instructions,
+        ingredients: data.ingredients,
+        spices: data.spices,
+        prep_time: data.prep_time,
+        cook_time: data.cook_time,
+        servings: data.servings,
+        nutrition: data.nutrition,
+        full_text: data.full_text
+      };
       
-      setGeneratedRecipe(mainContent);
+      console.log("Setting recipe data:", recipeData);
+      setRecipeToSave(recipeData);
+      setGeneratedRecipe(data.full_text);
       setIsRecipeModalOpen(true);
-      setSelectedItemIds([]); // Clear selection after generating
-    } catch (error) {
+      if (!isSelectingIngredients) {
+        setSelectedItemIds([]); // Clear selection after generating
+      }
+    } catch (error: any) {
       console.error("Error generating recipe:", error);
-      alert("Failed to generate recipe.");
+      alert(`Failed to generate recipe: ${error.message}`);
+    } finally {
+      setIsGeneratingRecipe(false);
     }
   };
 
@@ -401,11 +339,11 @@ export default function GroceryList() {
 
   /* —— Autocomplete —— */
   useEffect(() => {
-    if (newName.length === 0) return setSuggestions([]);
-    const needle = slug(newName);
-    const matches = getAllFoodItems()
-      .filter(item => slug(item).includes(needle))
-      .slice(0, 8);
+    if (newName.length === 0) {
+      setSuggestions([]);
+      return;
+    }
+    const matches = getSuggestions(newName);
     setSuggestions(matches);
   }, [newName]);
 
@@ -423,20 +361,25 @@ export default function GroceryList() {
         id: Date.now(),
         name: trimmed,
         quantity: newQty,
+        quantity_unit: newUnit,
         purchased: false,
         category: getCategory(trimmed),
       },
     ]);
     resetInput();
   };
+
   const resetInput = () => {
     setNewName("");
     setNewQty(1);
+    setSuggestions([]);
     inputRef.current?.focus();
   };
+
   const togglePurchased = (id: number) =>
     setItems(items.map((i) => (i.id === id ? { ...i, purchased: !i.purchased } : i)));
   const deleteItem = (id: number) => setItems(items.filter((i) => i.id !== id));
+  const restoreItem = (id: number) => setItems(items.map((i) => (i.id === id ? { ...i, purchased: false } : i))); 
   const clearPurchased = () => setItems(items.filter((i) => !i.purchased));
 
   const toggleItemSelected = (id: number) => {
@@ -619,6 +562,18 @@ export default function GroceryList() {
               aria-label="Quantity"
             />
 
+            {/* Quantity unit */}
+            <select
+            className="w-24 px-4 py-4 rounded-full border border-emerald-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200/60 text-lg bg-white/80 text-center" 
+            value={newUnit}
+            onChange={(e) => setNewUnit(e.target.value)}
+            aria-label = "Quantity unit"
+            >
+              {unitOptions.map((unit) => (
+                <option key={unit} value={unit}>{unit}</option>
+              ))}
+            </select>
+
             {/* Add button */}
             <button
               onClick={addItem}
@@ -799,7 +754,7 @@ export default function GroceryList() {
                                   <span className="text-lg font-medium text-gray-700">
                                     {item.name}
                                     <span className="ml-2 text-emerald-600 font-semibold bg-emerald-100/70 px-2 py-0.5 rounded-full text-sm">
-                                      ×{item.quantity}
+                                      ×{item.quantity} {item.quantity_unit}
                                     </span>
                                   </span>
                                 </span>
@@ -863,7 +818,7 @@ export default function GroceryList() {
                         <span className="text-lg">
                           {item.name}
                           <span className="ml-2 text-green-400 font-medium bg-green-100/70 px-2 py-0.5 rounded-full text-sm">
-                            ×{item.quantity}
+                            ×{item.quantity} {item.quantity_unit}
                           </span>
                         </span>
                       </span>
@@ -872,18 +827,31 @@ export default function GroceryList() {
                           {item.category}
                         </span>
                         {!isSelectingIngredients && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteItem(item.id);
-                            }}
-                            className="text-red-300 hover:text-red-500 transition-all focus:opacity-100 focus:outline-none p-2 hover:bg-red-50 rounded-xl"
-                            aria-label={`Delete ${item.name}`}
-                          >
-                            <TrashIcon className="w-5 h-5" />
-                          </button>
+                          <>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                restoreItem(item.id);
+                              }}
+                              className="text-emerald-400 hover:text-emerald-600 transition-all focus:outline-none p-2 hover:bg-emerald-50 rounded-xl"
+                              aria-label={`Restore ${item.name}`}
+                            >
+                              <ArrowUturnLeftIcon className="w-5 h-5" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteItem(item.id);
+                              }}
+                              className="text-red-300 hover:text-red-500 transition-all focus:opacity-100 focus:outline-none p-2 hover:bg-red-50 rounded-xl"
+                              aria-label={`Delete ${item.name}`}
+                            >
+                              <TrashIcon className="w-5 h-5" />
+                            </button>
+                          </>
                         )}
                       </div>
+
                     </motion.li>
                   ))}
                 </AnimatePresence>
@@ -894,9 +862,14 @@ export default function GroceryList() {
       </div>
       <NavBar />
 
+      {/* Recipe Loading State */}
+      <AnimatePresence>
+        {isGeneratingRecipe && <RecipeLoader />}
+      </AnimatePresence>
+
       {/* Recipe Modal */}
       <AnimatePresence>
-        {isRecipeModalOpen && (generatedRecipe) && (
+        {isRecipeModalOpen && recipeToSave && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -933,11 +906,11 @@ export default function GroceryList() {
                     <div className="flex items-center gap-6 text-gray-600">
                       <div className="flex items-center gap-2">
                         <ClockIcon className="w-5 h-5 text-emerald-500" />
-                        <span>Prep: {recipeToSave?.prepTime || '15'} min</span>
+                        <span>Prep: {recipeToSave?.prep_time || '15'} min</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <FireIcon className="w-5 h-5 text-emerald-500" />
-                        <span>Cook: {recipeToSave?.cookTime || '20'} min</span>
+                        <span>Cook: {recipeToSave?.cook_time || '20'} min</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <UserGroupIcon className="w-5 h-5 text-emerald-500" />
@@ -946,61 +919,70 @@ export default function GroceryList() {
                     </div>
                   </div>
 
-                  {/* Basic Nutrition Row */}
-                  <div className="bg-emerald-50 rounded-xl p-4">
-                    <div className="grid grid-cols-5 gap-4">
-                      <div className="bg-white rounded-lg p-3 text-center">
-                        <div className="text-lg font-bold text-emerald-600">{recipeToSave?.nutrition?.calories}</div>
-                        <div className="text-sm text-gray-600">Calories</div>
-                      </div>
-                      <div className="bg-white rounded-lg p-3 text-center">
-                        <div className="text-lg font-bold text-emerald-600">{recipeToSave?.nutrition?.protein}g</div>
-                        <div className="text-sm text-gray-600">Protein</div>
-                      </div>
-                      <div className="bg-white rounded-lg p-3 text-center">
-                        <div className="text-lg font-bold text-emerald-600">{recipeToSave?.nutrition?.total_carbs}g</div>
-                        <div className="text-sm text-gray-600">Carbs</div>
-                      </div>
-                      <div className="bg-white rounded-lg p-3 text-center">
-                        <div className="text-lg font-bold text-emerald-600">{recipeToSave?.nutrition?.total_fat}g</div>
-                        <div className="text-sm text-gray-600">Fat</div>
-                      </div>
-                      <div className="bg-white rounded-lg p-3 text-center">
-                        <div className="text-lg font-bold text-emerald-600">{recipeToSave?.nutrition?.fiber}g</div>
-                        <div className="text-sm text-gray-600">Fiber</div>
-                      </div>
-                    </div>
-                  </div>
+                  {/* Nutrition Information */}
+                  {recipeToSave?.nutrition && (
+                    <DetailedNutrition
+                      nutrition={recipeToSave.nutrition}
+                      isExpanded={showDetailedNutrition}
+                      onToggle={() => setShowDetailedNutrition(!showDetailedNutrition)}
+                    />
+                  )}
 
                   {/* Recipe Content */}
                   <div className="bg-emerald-50/30 rounded-xl overflow-hidden">
-                    {generatedRecipe.split('---Detailed Nutrition Facts---')[0].split('\n\n').map((section, idx) => {
-                      const sectionTitle = section.split('\n')[0].trim();
-                      const sectionContent = section.split('\n').slice(1).join('\n');
-                      
-                      if (!sectionTitle || !sectionContent) return null;
-                      
-                      return (
-                        <div key={idx} className={`p-4 ${idx > 0 ? 'border-t border-emerald-100' : ''}`}>
-                          <h4 className="font-semibold text-emerald-700 mb-2">{sectionTitle}</h4>
-                          <div className="prose max-w-none text-gray-600" 
-                               dangerouslySetInnerHTML={{ 
-                                 __html: sectionContent
-                                   .replace(/•/g, '◆')  // Replace bullets with diamonds
-                                   .replace(/\n/g, '<br/>')
-                                   .replace(/(\d+\.)/g, '<br/>$1')  // Add line breaks before numbered steps
-                                   .replace(/◆/g, '<br/>•')  // Add line breaks before bullets and restore bullet points
-                               }} 
-                          />
-                        </div>
-                      );
-                    })}
+                    {/* Ingredients Section */}
+                    <div className="p-4">
+                      <h4 className="font-semibold text-emerald-700 mb-2">Ingredients</h4>
+                      <div className="prose max-w-none text-gray-600" 
+                           dangerouslySetInnerHTML={{ 
+                             __html: recipeToSave?.ingredients?.replace(/•/g, '◆')
+                               .replace(/\n/g, '<br/>')
+                               .replace(/◆/g, '<br/>•') || ''
+                           }} 
+                      />
+                    </div>
+
+                    {/* Spices Section */}
+                    {recipeToSave?.spices && (
+                      <div className="p-4 border-t border-emerald-100">
+                        <h4 className="font-semibold text-emerald-700 mb-2">Spices & Seasonings</h4>
+                        <div className="prose max-w-none text-gray-600" 
+                             dangerouslySetInnerHTML={{ 
+                               __html: recipeToSave.spices.replace(/•/g, '◆')
+                                 .replace(/\n/g, '<br/>')
+                                 .replace(/◆/g, '<br/>•')
+                             }} 
+                        />
+                      </div>
+                    )}
+
+                    {/* Instructions Section */}
+                    <div className="p-4 border-t border-emerald-100">
+                      <h4 className="font-semibold text-emerald-700 mb-2">Instructions</h4>
+                      <div className="prose max-w-none text-gray-600" 
+                           dangerouslySetInnerHTML={{ 
+                             __html: recipeToSave?.instructions?.replace(/(\d+\.)/g, '<br/>$1')
+                               .replace(/\n/g, '<br/>') || ''
+                           }} 
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Fixed bottom buttons */}
               <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 rounded-b-3xl flex gap-3 mt-auto">
+                <button
+                  onClick={() => generateRecipe()}
+                  disabled={isGeneratingRecipe}
+                  className={`flex-1 px-6 py-3 rounded-full text-white transition-colors ${
+                    isGeneratingRecipe
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-purple-500 hover:bg-purple-600'
+                  }`}
+                >
+                  {isGeneratingRecipe ? 'Generating...' : 'I want something else'}
+                </button>
                 <button
                   onClick={() => {
                     setIsRecipeModalOpen(false);

@@ -1,109 +1,78 @@
 import categoryDict from "../../../backend/data/category_map.json";
-import Papa from 'papaparse';
 
 // Type definitions
 type CategoryMap = { [key: string]: string };
-type CacheMap = { [key: string]: { category: string; source: 'json' | 'csv' } };
 
-// Initialize cache
-const categoryCache: CacheMap = {};
+// Food categories and their items
+const foodCategories = {
+  'Fruits & Vegetables': [
+    'Apple', 'Banana', 'Orange', 'Strawberries', 'Blueberries',
+    'Tomato', 'Cucumber', 'Lettuce', 'Spinach', 'Carrot',
+    'Potato', 'Onion', 'Garlic', 'Broccoli', 'Cauliflower',
+    'Pepper', 'Zucchini', 'Mushrooms', 'Avocado', 'Lemon'
+  ],
+  'Meat & Seafood': [
+    'Chicken Breast', 'Ground Beef', 'Salmon', 'Tuna', 'Shrimp',
+    'Pork Chops', 'Turkey', 'Lamb', 'Cod', 'Tilapia'
+  ],
+  'Dairy & Eggs': [
+    'Milk', 'Eggs', 'Cheese', 'Yogurt', 'Butter',
+    'Cream', 'Sour Cream', 'Cottage Cheese', 'Cream Cheese'
+  ],
+  'Grains & Pasta': [
+    'Rice', 'Pasta', 'Bread', 'Cereal', 'Oats',
+    'Quinoa', 'Flour', 'Tortillas', 'Bagels'
+  ],
+  'Pantry Items': [
+    'Olive Oil', 'Salt', 'Pepper', 'Sugar', 'Flour',
+    'Baking Powder', 'Baking Soda', 'Vanilla Extract',
+    'Honey', 'Maple Syrup', 'Soy Sauce', 'Vinegar'
+  ],
+  'Snacks': [
+    'Chips', 'Nuts', 'Crackers', 'Popcorn', 'Pretzels',
+    'Granola Bars', 'Trail Mix', 'Dried Fruit', 'Twix', 'Mars', 'Bisli', 'Chocolate',
+    'Kinder', 'KitKat', 'Snickers', 'M&M', 'Skittles', 'Reese'
+  ],
+  'Beverages': [
+    'Coffee', 'Tea', 'Juice', 'Soda', 'Water',
+    'Wine', 'Beer', 'Sparkling Water'
+  ],
+  'Canned Goods': [
+    'Beans', 'Soup', 'Tuna', 'Tomato Sauce', 'Corn',
+    'Green Beans', 'Chickpeas', 'Diced Tomatoes'
+  ],
+  'Frozen Foods': [
+    'Ice Cream', 'Frozen Pizza', 'Frozen Vegetables',
+    'Frozen Fruit', 'Frozen Meals'
+  ]
+};
 
-// Load and parse CSV data
-let csvCategories: CategoryMap = {};
-let allFoodItems: string[] = [];
-
-// Load CSV data
-async function loadCsvData() {
-  try {
-    const response = await fetch('http://localhost:8000/api/grocery-data/csv');
-    const csvText = await response.text();
-    const results = Papa.parse(csvText, { header: true });
-    
-    if (results.data && Array.isArray(results.data)) {
-      results.data.forEach((row: any) => {
-        if (row['Title'] && row['Sub Category']) {
-          const title = cleanTitle(row['Title']);
-          csvCategories[title] = row['Sub Category'];
-          allFoodItems.push(title);
-        }
-      });
-    }
-
-    // Add JSON items to allFoodItems
-    allFoodItems = [
-      ...allFoodItems,
-      ...Object.keys(categoryDict as CategoryMap)
-    ];
-  } catch (error) {
-    console.warn('Failed to load CSV categories:', error);
-  }
-}
-
-// Initialize data loading
-loadCsvData();
-
-// Clean and normalize text for matching
-function cleanTitle(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-// Get category with caching and fallback
-export function getCategory(name: string): string {
-  const cleanName = cleanTitle(name);
-  
-  // Check cache first
-  if (categoryCache[cleanName]) {
-    return categoryCache[cleanName].category;
-  }
-
-  // Check JSON dictionary first (primary source)
-  if (cleanName in categoryDict) {
-    const category = (categoryDict as CategoryMap)[cleanName];
-    categoryCache[cleanName] = { category, source: 'json' };
-    return category;
-  }
-
-  // Try CSV categories as fallback
-  for (const [csvTitle, category] of Object.entries(csvCategories)) {
-    if (csvTitle.includes(cleanName) || cleanName.includes(csvTitle)) {
-      categoryCache[cleanName] = { category, source: 'csv' };
+// Get category for a food item
+export function getCategory(item: string): string {
+  const normalizedItem = item.toLowerCase();
+  for (const [category, items] of Object.entries(foodCategories)) {
+    if (items.some(food => food.toLowerCase() === normalizedItem)) {
       return category;
     }
   }
-
-  // Default category if not found
-  categoryCache[cleanName] = { category: 'Other', source: 'json' };
   return 'Other';
-}
-
-// Export helper functions
-export function getCategorySource(name: string): 'json' | 'csv' | 'default' {
-  const cleanName = cleanTitle(name);
-  return categoryCache[cleanName]?.source || 'default';
-}
-
-export function clearCategoryCache(): void {
-  Object.keys(categoryCache).forEach(key => delete categoryCache[key]);
-}
-
-// Get all available categories
-export function getAllCategories(): string[] {
-  const categories = new Set<string>();
-  
-  // Add categories from JSON
-  Object.values(categoryDict as CategoryMap).forEach(cat => categories.add(cat));
-  
-  // Add categories from CSV
-  Object.values(csvCategories).forEach(cat => categories.add(cat));
-  
-  return Array.from(categories).sort();
 }
 
 // Get all food items for autocomplete
 export function getAllFoodItems(): string[] {
-  return Array.from(new Set(allFoodItems)).sort();
-} 
+  return Object.values(foodCategories).flat();
+}
+
+// Get suggestions for a partial input
+export function getSuggestions(input: string): string[] {
+  if (!input) return [];
+  const normalizedInput = input.toLowerCase();
+  return getAllFoodItems()
+    .filter(item => item.toLowerCase().includes(normalizedInput))
+    .slice(0, 8);
+}
+
+// Get all available categories
+export function getAllCategories(): string[] {
+  return Object.keys(foodCategories).sort();
+}

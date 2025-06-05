@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import List, Dict, Union, Optional
 from services.chat_generate_recipes import generate_recipe_from_ingredients
 import json
 from pathlib import Path
@@ -55,15 +56,69 @@ class Recipe(BaseModel):
     prepTime: str
     cookTime: str
 
+class RecipeRequest(BaseModel):
+    ingredients: List[str]
+
+class NutritionData(BaseModel):
+    calories: Optional[int] = None
+    protein: Optional[float] = None
+    total_carbs: Optional[float] = None
+    net_carbs: Optional[float] = None
+    fiber: Optional[float] = None
+    total_fat: Optional[float] = None
+    saturated_fat: Optional[float] = None
+    monounsaturated_fat: Optional[float] = None
+    polyunsaturated_fat: Optional[float] = None
+    trans_fat: Optional[float] = None
+    cholesterol: Optional[float] = None
+    total_sugars: Optional[float] = None
+    added_sugars: Optional[float] = None
+    sodium: Optional[float] = None
+    potassium: Optional[float] = None
+    calcium: Optional[float] = None
+    iron: Optional[float] = None
+    magnesium: Optional[float] = None
+    zinc: Optional[float] = None
+    selenium: Optional[float] = None
+    vitamin_a: Optional[float] = None
+    vitamin_c: Optional[float] = None
+    vitamin_d: Optional[float] = None
+    vitamin_e: Optional[float] = None
+    vitamin_k: Optional[float] = None
+    thiamin: Optional[float] = None
+    riboflavin: Optional[float] = None
+    niacin: Optional[float] = None
+    vitamin_b6: Optional[float] = None
+    vitamin_b12: Optional[float] = None
+    folate: Optional[float] = None
+
+class RecipeResponse(BaseModel):
+    title: str
+    prep_time: str
+    cook_time: str
+    servings: int
+    ingredients: str
+    spices: str
+    instructions: str
+    nutrition: NutritionData
+    full_text: str
+
 app = FastAPI()
 
-# Configure CORS
+# Configure CORS with more permissive settings for development
+origins = [
+    "http://localhost:3000",    # React frontend
+    "http://127.0.0.1:3000",   # Alternative localhost
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Explicitly list methods
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 # Path to store recipes
@@ -156,7 +211,30 @@ def add_food(food: FoodItem):
 # use the chat_generate_recipes.py file to generate the recipe
 # function meant for the grocery list page
 @app.post("/api/generate_recipe_from_ingredients")
-def generate_recipe(ingredients_data: IngredientsList):
-    recipe = generate_recipe_from_ingredients(ingredients_data.ingredients)
-    return {"message": recipe}
+async def generate_recipe(request: RecipeRequest):
+    try:
+        if not request.ingredients:
+            raise HTTPException(status_code=400, detail="No ingredients provided")
+        
+        if len(request.ingredients) < 1:
+            raise HTTPException(status_code=400, detail="At least one ingredient is required")
+            
+        print(f"Received ingredients: {request.ingredients}")  # Enhanced debug log
+        
+        recipe_data = generate_recipe_from_ingredients(request.ingredients)
+        
+        if not recipe_data:
+            raise HTTPException(status_code=500, detail="Failed to generate recipe")
+            
+        if "error" in recipe_data:
+            raise HTTPException(status_code=500, detail=recipe_data["error"])
+            
+        return recipe_data
+        
+    except HTTPException as he:
+        print(f"HTTP Exception in generate_recipe: {str(he)}")  # Debug log
+        raise he
+    except Exception as e:
+        print(f"Unexpected error in generate_recipe: {str(e)}")  # Debug log
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
