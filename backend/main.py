@@ -107,19 +107,17 @@ app = FastAPI()
 
 # Configure CORS with more permissive settings for development
 origins = [
-    "http://localhost:3000",    # React frontend
-    "http://127.0.0.1:3000",   # Alternative localhost
+    "http://localhost:5174",  # or whatever your frontend origin is
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=origins,  # must be specific, not "*"
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Explicitly list methods
+    allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"],
-    max_age=3600,  # Cache preflight requests for 1 hour
 )
+
 
 # Path to store recipes
 RECIPES_FILE = Path("data/recipes.json")
