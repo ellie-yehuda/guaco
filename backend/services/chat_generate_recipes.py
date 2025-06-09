@@ -7,8 +7,6 @@ from typing import Dict, Union
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-print("OPENAI_API_KEY is", os.getenv("OPENAI_API_KEY"))
-
 
 def parse_nutrition_values(text: str) -> Dict[str, Union[float, int]]:
     """Parse all nutrition values from the recipe text."""
@@ -26,44 +24,44 @@ def parse_nutrition_values(text: str) -> Dict[str, Union[float, int]]:
             return None
 
     # Basic nutrition
-    nutrition["calories"] = extract_value(r"Calories: (\d+)")
-    nutrition["protein"] = extract_value(r"Protein: ([\d.]+)g")
-    nutrition["total_carbs"] = extract_value(r"(?:Total )?Carbs?: ([\d.]+)g")
-    nutrition["fiber"] = extract_value(r"Fiber: ([\d.]+)g")
-    nutrition["total_fat"] = extract_value(r"(?:Total )?Fat: ([\d.]+)g")
+    nutrition["calories"] = extract_value(r"Calories:\s*([\d.]+)\s*kcal")
+    nutrition["protein"] = extract_value(r"Protein:\s*([\d.]+)\s*g")
+    nutrition["total_carbs"] = extract_value(r"(?:Total )?Carbs?:\s*([\d.]+)\s*g")
+    nutrition["fiber"] = extract_value(r"Fiber:\s*([\d.]+)\s*g")
+    nutrition["total_fat"] = extract_value(r"(?:Total )?Fat:\s*([\d.]+)\s*g")
 
     # Detailed fats
-    nutrition["saturated_fat"] = extract_value(r"Saturated Fat: ([\d.]+)g")
-    nutrition["monounsaturated_fat"] = extract_value(r"Monounsaturated Fat: ([\d.]+)g")
-    nutrition["polyunsaturated_fat"] = extract_value(r"Polyunsaturated Fat: ([\d.]+)g")
-    nutrition["trans_fat"] = extract_value(r"Trans Fat: ([\d.]+)g")
-    nutrition["cholesterol"] = extract_value(r"Cholesterol: ([\d.]+)mg")
+    nutrition["saturated_fat"] = extract_value(r"Saturated Fat:\s*([\d.]+)\s*g")
+    nutrition["monounsaturated_fat"] = extract_value(r"Monounsaturated Fat:\s*([\d.]+)\s*g")
+    nutrition["polyunsaturated_fat"] = extract_value(r"Polyunsaturated Fat:\s*([\d.]+)\s*g")
+    nutrition["trans_fat"] = extract_value(r"Trans Fat:\s*([\d.]+)\s*g")
+    nutrition["cholesterol"] = extract_value(r"Cholesterol:\s*([\d.]+)\s*mg")
 
     # Sugars
-    nutrition["total_sugars"] = extract_value(r"Total Sugars: ([\d.]+)g")
-    nutrition["added_sugars"] = extract_value(r"Added Sugars: ([\d.]+)g")
+    nutrition["total_sugars"] = extract_value(r"Total Sugars:\s*([\d.]+)\s*g")
+    nutrition["added_sugars"] = extract_value(r"Added Sugars:\s*([\d.]+)\s*g")
 
     # Minerals
-    nutrition["sodium"] = extract_value(r"Sodium: ([\d.]+)mg")
-    nutrition["potassium"] = extract_value(r"Potassium: ([\d.]+)mg")
-    nutrition["calcium"] = extract_value(r"Calcium: ([\d.]+)mg")
-    nutrition["iron"] = extract_value(r"Iron: ([\d.]+)mg")
-    nutrition["magnesium"] = extract_value(r"Magnesium: ([\d.]+)mg")
-    nutrition["zinc"] = extract_value(r"Zinc: ([\d.]+)mg")
-    nutrition["selenium"] = extract_value(r"Selenium: ([\d.]+)mcg")
+    nutrition["sodium"] = extract_value(r"Sodium:\s*([\d.]+)\s*mg")
+    nutrition["potassium"] = extract_value(r"Potassium:\s*([\d.]+)\s*mg")
+    nutrition["calcium"] = extract_value(r"Calcium:\s*([\d.]+)\s*mg")
+    nutrition["iron"] = extract_value(r"Iron:\s*([\d.]+)\s*mg")
+    nutrition["magnesium"] = extract_value(r"Magnesium:\s*([\d.]+)\s*mg")
+    nutrition["zinc"] = extract_value(r"Zinc:\s*([\d.]+)\s*mg")
+    nutrition["selenium"] = extract_value(r"Selenium:\s*([\d.]+)\s*mcg")
 
     # Vitamins
-    nutrition["vitamin_a"] = extract_value(r"Vitamin A: ([\d.]+)IU")
-    nutrition["vitamin_c"] = extract_value(r"Vitamin C: ([\d.]+)mg")
-    nutrition["vitamin_d"] = extract_value(r"Vitamin D: ([\d.]+)IU")
-    nutrition["vitamin_e"] = extract_value(r"Vitamin E: ([\d.]+)mg")
-    nutrition["vitamin_k"] = extract_value(r"Vitamin K: ([\d.]+)mcg")
-    nutrition["thiamin"] = extract_value(r"Thiamin:? (?:\(B1\):)? ([\d.]+)mg")
-    nutrition["riboflavin"] = extract_value(r"Riboflavin:? (?:\(B2\):)? ([\d.]+)mg")
-    nutrition["niacin"] = extract_value(r"Niacin:? (?:\(B3\):)? ([\d.]+)mg")
-    nutrition["vitamin_b6"] = extract_value(r"(?:Vitamin )?B6: ([\d.]+)mg")
-    nutrition["vitamin_b12"] = extract_value(r"(?:Vitamin )?B12: ([\d.]+)mcg")
-    nutrition["folate"] = extract_value(r"Folate: ([\d.]+)mcg")
+    nutrition["vitamin_a"] = extract_value(r"Vitamin A:\s*([\d.]+)\s*IU")
+    nutrition["vitamin_c"] = extract_value(r"Vitamin C:\s*([\d.]+)\s*mg")
+    nutrition["vitamin_d"] = extract_value(r"Vitamin D:\s*([\d.]+)\s*IU")
+    nutrition["vitamin_e"] = extract_value(r"Vitamin E:\s*([\d.]+)\s*mg")
+    nutrition["vitamin_k"] = extract_value(r"Vitamin K:\s*([\d.]+)\s*mcg")
+    nutrition["thiamin"] = extract_value(r"Thiamin:?\s*(?:\(B1\):)?\s*([\d.]+)\s*mg")
+    nutrition["riboflavin"] = extract_value(r"Riboflavin:?\s*(?:\(B2\):)?\s*([\d.]+)\s*mg")
+    nutrition["niacin"] = extract_value(r"Niacin:?\s*(?:\(B3\):)?\s*([\d.]+)\s*mg")
+    nutrition["vitamin_b6"] = extract_value(r"(?:Vitamin )?B6:\s*([\d.]+)\s*mg")
+    nutrition["vitamin_b12"] = extract_value(r"(?:Vitamin )?B12:\s*([\d.]+)\s*mcg")
+    nutrition["folate"] = extract_value(r"Folate:\s*([\d.]+)\s*mcg")
 
     # Calculate net carbs if possible
     if nutrition["total_carbs"] is not None and nutrition["fiber"] is not None:
@@ -211,6 +209,7 @@ Now generate a recipe using exactly these ingredients: {ingredients_list}
         return {'error': str(e)}
     
     recipe_text = response.choices[0].message.content
+    print("RAW AI RESPONSE CONTENT:\n", recipe_text)
     
     # Parse all recipe components
     metadata = parse_recipe_metadata(recipe_text)
@@ -224,6 +223,6 @@ Now generate a recipe using exactly these ingredients: {ingredients_list}
         "nutrition": nutrition,
         "full_text": recipe_text  # Include full text for frontend formatting
     }
-    
+    print(recipe_data)
     return recipe_data
 

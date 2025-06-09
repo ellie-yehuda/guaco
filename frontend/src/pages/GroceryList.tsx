@@ -305,7 +305,8 @@ export default function GroceryList() {
         nutrition: data.nutrition,
         full_text: data.full_text
       };
-      
+
+      console.log("Nutrition Data:", recipeData.nutrition);
       console.log("Setting recipe data:", recipeData);
       setRecipeToSave(recipeData);
       setGeneratedRecipe(data.full_text);
