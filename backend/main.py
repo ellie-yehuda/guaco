@@ -105,14 +105,18 @@ class RecipeResponse(BaseModel):
 
 app = FastAPI()
 
-# Configure CORS with more permissive settings for development
+# Configure CORS with more permissive settings for development and production
 origins = [
-    "http://localhost:5174",  # or whatever your frontend origin is
+    "http://localhost:5174",
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://guaco.vercel.app",
+    "https://*.vercel.app",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # must be specific, not "*"
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
