@@ -2,10 +2,8 @@
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],
-  "outputDirectory": "dist",
   "buildCommand": "npm install && npm run build",
+  "outputDirectory": "dist",
   "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "framework": "vite",
-  "root": "frontend"
+  "installCommand": "npm install"
 } 
