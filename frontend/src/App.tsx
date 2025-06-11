@@ -4,9 +4,6 @@ import Welcome from "./pages/Welcome";
 import Onboarding from "./pages/Onboarding";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
-import GroceryList from "./pages/GroceryList";
-import Recipes from "./pages/Recipes";
-import Tracker from "./pages/Tracker";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { Suspense, lazy } from "react";
 

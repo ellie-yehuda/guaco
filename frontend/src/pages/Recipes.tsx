@@ -1,17 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useRecipes, RecipeProvider } from '@/context/RecipeContext';
-import RecipeList from '@/components/RecipeList';
-import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
-import { Search } from "lucide-react";
+import { useParams, useNavigate } from 'react-router-dom';
+import { useRecipes, RecipeProvider } from '../context/RecipeContext';
+import RecipeList from '../components/RecipeList';
+import { Button } from "../components/ui/Button";
 
 /**
  * Recipes Page – vibrant redesign ✨
@@ -20,7 +11,7 @@ import { Search } from "lucide-react";
 const RecipesContent = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
-  const { recipes, fetchRecipes, isLoading } = useRecipes();
+  const { recipes, fetchRecipes } = useRecipes();
   const [activeCategory, setActiveCategory] = useState(categoryId || '');
 
   const categories = [

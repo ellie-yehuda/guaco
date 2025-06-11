@@ -5,7 +5,7 @@ export default function useUser() {
     () => JSON.parse(localStorage.getItem("platefulUser") ?? "{}")
   );
 
-  const save = updates => {
+  const save = (updates: any) => {
     const next = { ...user, ...updates };
     localStorage.setItem("platefulUser", JSON.stringify(next));
     setUser(next);

@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { useRecipes, Recipe } from '@/context/RecipeContext';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
+import { Button } from '../components/ui/Button';
+import { useRecipes, Recipe } from '../context/RecipeContext';
 
 interface RecipeListProps {
   categoryId: string;

@@ -1,7 +1,4 @@
-import categoryDict from "../../../backend/data/category_map.json";
 
-// Type definitions
-type CategoryMap = { [key: string]: string };
 
 // Food categories and their items
 const foodCategories = {

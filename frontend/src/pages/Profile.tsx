@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import useUser from '../hooks/useUser';
+// import useUser from '../hooks/useUser';
 import {
   XMarkIcon,
   PencilSquareIcon,
@@ -14,8 +14,8 @@ const focusOptions = [
 
 export default function Profile() {
   const navigate = useNavigate();
-  const [user, saveUser] = useUser();
-  const [profile, setProfile] = useState({});
+  // const [user, saveUser] = useUser();
+  const [profile, setProfile] = useState<any>({});
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('platefulUser') || '{}');
@@ -60,7 +60,7 @@ export default function Profile() {
   };
 
   // Helper for focus priorities
-  function renderPriorityBar(val) {
+  function renderPriorityBar(val: number) {
     return (
       <div className="flex items-center space-x-2 w-full">
         <div className="flex-1 h-2 rounded bg-primary-100 overflow-hidden">
@@ -103,8 +103,8 @@ export default function Profile() {
             <div><span className="font-medium">Age:</span> {profile.age || <span className="text-gray-400">—</span>}</div>
             <div><span className="font-medium">Height:</span> {profile.height ? `${profile.height} cm` : <span className="text-gray-400">—</span>}</div>
             <div><span className="font-medium">Weight:</span> {profile.weight ? `${profile.weight} kg` : <span className="text-gray-400">—</span>}</div>
-            <div><span className="font-medium">Sex at birth:</span> {sexLabels[profile.sexAssigned] || <span className="text-gray-400">—</span>}</div>
-            <div><span className="font-medium">Gender identity:</span> {genderLabels[profile.genderIdentity] || <span className="text-gray-400">—</span>}</div>
+            <div><span className="font-medium">Sex at birth:</span> {sexLabels[profile.sexAssigned as keyof typeof sexLabels] || <span className="text-gray-400">—</span>}</div>
+            <div><span className="font-medium">Gender identity:</span> {genderLabels[profile.genderIdentity as keyof typeof genderLabels] || <span className="text-gray-400">—</span>}</div>
             {profile.sexAssigned && profile.genderIdentity && profile.sexAssigned !== profile.genderIdentity && (
               <div><span className="font-medium">Hormone therapy:</span> {profile.hormonalTherapy === true ? 'Yes' : profile.hormonalTherapy === false ? 'No' : 'Prefer not to say'}</div>
             )}
@@ -133,9 +133,9 @@ export default function Profile() {
             <h2 className="text-lg font-semibold text-gray-900">Dietary Preferences</h2>
             <button onClick={() => navigate('/onboarding', { state: { step: 3 } })} className="text-primary-600 hover:text-primary-700"><PencilSquareIcon className="w-5 h-5" /></button>
           </div>
-          <div className="mb-2"><span className="font-medium">Diet:</span> {dietLabels[profile.diet] || <span className="text-gray-400">—</span>}</div>
+          <div className="mb-2"><span className="font-medium">Diet:</span> {dietLabels[profile.diet as keyof typeof dietLabels] || <span className="text-gray-400">—</span>}</div>
           <div className="mb-2"><span className="font-medium">Disliked foods:</span> {profile.disliked && profile.disliked.length > 0 ? (
-            <span className="flex flex-wrap gap-2 mt-1">{profile.disliked.map(skip => <span key={skip} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">{skipLabels[skip]}</span>)}</span>
+            <span className="flex flex-wrap gap-2 mt-1">{profile.disliked.map((skip: any) => <span key={skip} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">{skipLabels[skip as keyof typeof skipLabels]}</span>)}</span>
           ) : <span className="text-gray-400 ml-2">None</span>}</div>
         </motion.div>
 
@@ -147,8 +147,8 @@ export default function Profile() {
           </div>
           {profile.allergies && profile.allergies.length > 0 ? (
             <div className="flex flex-wrap gap-2">
-              {profile.allergies.map(allergy => (
-                <span key={allergy} className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm">{allergenLabels[allergy]}</span>
+              {profile.allergies.map((allergy: any) => (
+                <span key={allergy} className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm">{allergenLabels[allergy as keyof typeof allergenLabels]}</span>
               ))}
             </div>
           ) : <span className="text-gray-400">None</span>}

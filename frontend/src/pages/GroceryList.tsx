@@ -30,7 +30,7 @@ import RecipeLoader from '../components/RecipeLoader';
 import { Recipe } from '../types/Recipe';
 
 /* --------------------------- 1. Data sources ------------------------------ */
-import { getCategory, getAllFoodItems, getSuggestions } from "../utils/categoryUtils";
+import { getCategory, getSuggestions } from "../utils/categoryUtils";
 
 /* --------------------------- 2. Types ------------------------------------ */
 type GroceryItem = {
@@ -53,14 +53,6 @@ type CategoryAction = {
 
 /* --------------------------- 3. Helpers ---------------------------------- */
 const STORAGE_KEY = "platefulGroceries-v3"; // bump schema
-function slug(text: string): string {
-  return text
-    .normalize("NFKD")
-    .replace(/[^\w\s]/g, " ")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 /* ------------------------ 4. Component ----------------------------------- */
 type PurchaseDialogProps = {
@@ -133,12 +125,13 @@ const PurchaseDialog: React.FC<PurchaseDialogProps> = ({ item, onConfirm, onCanc
   );
 };
 
-const CategoryHeader: React.FC<{
+// @ts-ignore
+  const CategoryHeader: React.FC<{
   category: string;
   isCollapsed: boolean;
   onToggle: () => void;
   actions: CategoryAction;
-}> = ({ category, isCollapsed, onToggle, actions }) => {
+}> = ({ category, isCollapsed, actions }) => {
   return (
     <div className="flex items-center gap-2 py-2 group">
       <motion.div
@@ -199,7 +192,7 @@ export default function GroceryList() {
   const [purchaseDialog, setPurchaseDialog] = useState<{ item: GroceryItem } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedItemIds, setSelectedItemIds] = useState<number[]>([]);
-  const [generatedRecipe, setGeneratedRecipe] = useState<string | null>(null);
+  const [, setGeneratedRecipe] = useState<string | null>(null);
   const [isRecipeModalOpen, setIsRecipeModalOpen] = useState(false);
   const [isSelectingIngredients, setIsSelectingIngredients] = useState(false);
   const navigate = useNavigate();
@@ -381,7 +374,7 @@ export default function GroceryList() {
     setItems(items.map((i) => (i.id === id ? { ...i, purchased: !i.purchased } : i)));
   const deleteItem = (id: number) => setItems(items.filter((i) => i.id !== id));
   const restoreItem = (id: number) => setItems(items.map((i) => (i.id === id ? { ...i, purchased: false } : i))); 
-  const clearPurchased = () => setItems(items.filter((i) => !i.purchased));
+  // const clearPurchased = () => setItems(items.filter((i) => !i.purchased));
 
   const toggleItemSelected = (id: number) => {
     setSelectedItemIds((prevSelected) =>

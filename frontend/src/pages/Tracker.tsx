@@ -1,12 +1,11 @@
-import Navigation from "@/components/NavBar";
-import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import Navigation from "../components/NavBar";
+import { Card } from "../components/ui/Card";
 import { Apple, Droplets, Moon, Activity } from "lucide-react";
 import { useState } from "react";
-import FoodTrackingModal from "@/components/TrackFoodModal";
-import WaterTrackingModal from "@/components/TrackWaterModal";
-import SleepTrackingModal from "@/components/TrackSleepModal";
-import ExerciseTrackingModal from "@/components/TrackExerciseModal";
+import FoodTrackingModal from "../components/TrackFoodModal";
+import WaterTrackingModal from "../components/TrackWaterModal";
+import SleepTrackingModal from "../components/TrackSleepModal";
+import ExerciseTrackingModal from "../components/TrackExerciseModal";
 
 const Track = () => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
