@@ -10,6 +10,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+  },
+  server: {
+    port: 5174,
+    strictPort: true,
+    host: true,
+  },
   css: {
     postcss: './postcss.config.ts'
   }
