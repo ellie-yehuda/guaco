@@ -103,7 +103,7 @@ For backend deployment, add:
 
 ## Collaborators
 - Ellie Yehuda - ellie-yehuda
-- Almog Miron - Almog-ai
+- Almog Miron - almog-miron
   
 ## License
 
