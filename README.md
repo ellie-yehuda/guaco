@@ -15,10 +15,6 @@ A personalized recipe recommendation and meal planning application designed to h
 - Create and manage grocery lists
 - User profile with customization options
 
-## Screenshots
-
-(Coming soon)
-
 ## Getting Started
 
 ### Prerequisites
@@ -105,6 +101,10 @@ For Vercel deployment, add the following environment variables in the Vercel das
 For backend deployment, add:
 - `OPENAI_API_KEY`: Your OpenAI API key
 
+## Collaborators
+- Ellie Yehuda - ellie-yehuda
+- Almog Miron - Almog-ai
+  
 ## License
 
 [MIT](LICENSE) 
