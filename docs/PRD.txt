@@ -1,0 +1,33 @@
+# Product Requirements – Guaco
+
+## 🎯 Goal
+Build an engaging wellness app that helps users form healthy habits around food, water, sleep, and exercise, while providing personalized recipe suggestions via AI.
+
+## ❌ Non-goals
+- Advanced nutrient tracking (micronutrients, lab tests)
+- Social features beyond basic friends list
+- Monetization (for MVP)
+
+## ✅ Success Metrics
+- North-Star: Healthy actions logged per user per week ≥ 3
+- 7-day retention ≥ 30%
+- AI recipe generation success ≥ 95%
+
+## 🧍 Target Users (see Personas.md)
+- Fitness-focused (macros, logging)
+- Time-poor (quick AI help)
+- Recipe-organized (wants clean meal log & kitchen help)
+
+## 🗺️ User Flows
+- Welcome → Onboarding → Home
+- Log actions (recipe/snacks/water/exercise/etc)
+- Generate/add existing recipe → view → save or regenerate
+- Track streaks and progress → earn badges
+- Social Feed → share recipes and compete with friends
+
+## 🧪 Release Criteria
+- Can complete onboarding (4 steps)
+- Can generate a recipe from user constraints
+- Can log actions and see XP/badge progress
+- Mobile-friendly experience
+

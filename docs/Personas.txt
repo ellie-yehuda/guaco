@@ -1,0 +1,25 @@
+# Primary Personas
+
+---
+
+## 👟 Finn – Fitness-Focused
+- Age: 25 | Gender: Male | Hobby: Running
+- 📌 Goal: Hit macro targets, log workouts, sleep better
+- 😩 Pain: Finds food tracking tedious
+- 🧠 Mindset: "I want results without feeling like I'm using a spreadsheet."
+
+---
+
+## 💼 Taylor – Time-Poor Professional
+- Age: 32 | Gender: Female | Job: Lawyer
+- 📌 Goal: Stay healthy with zero planning
+- 😩 Pain: Meal prep and tracking feels overwhelming
+- 🧠 Mindset: "Make it easy or I won’t do it."
+
+---
+
+## 🍲 Riley – Recipe-Organized
+- Age: 29 | Gender: Non-binary | Parent
+- 📌 Goal: Keep meals planned and nutritious for family
+- 😩 Pain: Too many random recipes, not enough personalized ideas
+- 🧠 Mindset: "Use what I have, and show me how to make it nice."
