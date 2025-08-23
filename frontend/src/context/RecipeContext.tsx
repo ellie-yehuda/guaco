@@ -127,7 +127,12 @@ export const RecipeProvider = ({ children }: RecipeProviderProps) => {
 
   const parseRecipeWithAI = async (input: string) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/ai/parse-recipe`, {
+      console.log('Sending recipe text to AI parser:', input.substring(0, 100) + '...');
+      
+      const apiUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/ai/parse-recipe`;
+      console.log('API URL:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,13 +140,20 @@ export const RecipeProvider = ({ children }: RecipeProviderProps) => {
         body: JSON.stringify({ text: input }),
       });
       
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error(`Failed to parse recipe: ${response.status}`);
+        const errorText = await response.text();
+        console.error('Error response body:', errorText);
+        throw new Error(`Failed to parse recipe: ${response.status} - ${errorText}`);
       }
       
-      return await response.json();
+      const data = await response.json();
+      console.log('Parsed recipe data:', data);
+      return data;
     } catch (error) {
       console.error('Error parsing recipe with AI:', error);
+      alert(`Error parsing recipe: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return null;
     }
   };

@@ -1,4 +1,4 @@
-import { Recipe, Category, Ingredient } from '../types/Recipe';
+import { Recipe, Category, Ingredient, Nutrition } from '../types/Recipe';
 
 // API base URL - use environment variable or default to localhost
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -10,11 +10,11 @@ const STORAGE_RECIPES_KEY = 'guaco_recipes';
 // Interface for repository implementations
 interface RecipesRepository {
   listCategories(): Promise<Category[]>;
-  createCategory(category: Omit<Category, '_id'>): Promise<Category>;
-  createRecipe(recipe: Omit<Recipe, '_id' | 'createdAt' | 'updatedAt'>): Promise<Recipe>;
+  createCategory(category: Omit<Category, '_id' | 'id'>): Promise<Category>;
+  createRecipe(recipe: Omit<Recipe, '_id' | 'id' | 'createdAt' | 'updatedAt'>): Promise<Recipe>;
   listRecipesByCategory(categoryId: string): Promise<Recipe[]>;
   getRecipe(id: string): Promise<Recipe | null>;
-  updateRecipe(id: string, recipe: Omit<Recipe, '_id' | 'createdAt' | 'updatedAt'>): Promise<Recipe>;
+  updateRecipe(id: string, recipe: Omit<Recipe, '_id' | 'id' | 'createdAt' | 'updatedAt'>): Promise<Recipe>;
   deleteRecipe(id: string): Promise<boolean>;
 }
 
@@ -35,7 +35,7 @@ class ApiRecipesRepository implements RecipesRepository {
     }
   }
 
-  async createCategory(category: Omit<Category, '_id'>): Promise<Category> {
+  async createCategory(category: Omit<Category, '_id' | 'id'>): Promise<Category> {
     try {
       const response = await fetch(`${API_BASE_URL}/api/categories`, {
         method: 'POST',
@@ -56,7 +56,7 @@ class ApiRecipesRepository implements RecipesRepository {
     }
   }
 
-  async createRecipe(recipe: Omit<Recipe, '_id' | 'createdAt' | 'updatedAt'>): Promise<Recipe> {
+  async createRecipe(recipe: Omit<Recipe, '_id' | 'id' | 'createdAt' | 'updatedAt'>): Promise<Recipe> {
     try {
       const response = await fetch(`${API_BASE_URL}/api/recipes`, {
         method: 'POST',
@@ -172,7 +172,7 @@ class LocalStorageRecipesRepository implements RecipesRepository {
     return this.getCategories();
   }
 
-  async createCategory(category: Omit<Category, '_id'>): Promise<Category> {
+  async createCategory(category: Omit<Category, '_id' | 'id'>): Promise<Category> {
     const categories = this.getCategories();
     
     // Check if category with this slug already exists
@@ -193,7 +193,7 @@ class LocalStorageRecipesRepository implements RecipesRepository {
     return newCategory;
   }
 
-  async createRecipe(recipe: Omit<Recipe, '_id' | 'createdAt' | 'updatedAt'>): Promise<Recipe> {
+  async createRecipe(recipe: Omit<Recipe, '_id' | 'id' | 'createdAt' | 'updatedAt'>): Promise<Recipe> {
     const recipes = this.getRecipes();
     const now = new Date().toISOString();
     
@@ -221,7 +221,7 @@ class LocalStorageRecipesRepository implements RecipesRepository {
     return recipe || null;
   }
 
-  async updateRecipe(id: string, recipe: Omit<Recipe, '_id' | 'createdAt' | 'updatedAt'>): Promise<Recipe> {
+  async updateRecipe(id: string, recipe: Omit<Recipe, '_id' | 'id' | 'createdAt' | 'updatedAt'>): Promise<Recipe> {
     const recipes = this.getRecipes();
     const index = recipes.findIndex(r => r._id === id);
     

@@ -5,6 +5,7 @@ import Onboarding from "./pages/Onboarding";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { ToastProvider } from "./context/ToastContext";
 import { Suspense, lazy } from "react";
 
 // Lazy load some pages for performance
@@ -26,14 +27,15 @@ const LoadingFallback = () => (
 export default function App() {
   return (
     <ErrorBoundary>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Welcome />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          {/* Routes that use the NavBar layout */}
-          <Route element={<Layout />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
+      <ToastProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Welcome />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            {/* Routes that use the NavBar layout */}
+            <Route element={<Layout />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
             <Route 
               path="/grocery" 
               element={
@@ -44,6 +46,14 @@ export default function App() {
             />
             <Route 
               path="/recipes" 
+              element={
+                <Suspense fallback={<LoadingFallback />}>
+                  <LazyRecipes />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/recipes/category/:categoryId" 
               element={
                 <Suspense fallback={<LoadingFallback />}>
                   <LazyRecipes />
@@ -103,6 +113,7 @@ export default function App() {
           } />
         </Routes>
       </Router>
+      </ToastProvider>
     </ErrorBoundary>
   );
 }

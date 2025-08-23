@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecipes, RecipeProvider } from '../context/RecipeContext';
+import { useToast } from '../context/ToastContext';
 import RecipeEditor from '../components/RecipeEditor';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Button } from '../components/ui/Button';
+import { Recipe } from '../types/Recipe';
 
 const RecipeNewContent = () => {
   const navigate = useNavigate();
   const { categories, fetchCategories, createRecipe, isLoading } = useRecipes();
+  const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -17,13 +20,16 @@ const RecipeNewContent = () => {
     }
   }, [categories.length, fetchCategories]);
 
-  const handleSubmit = async (recipe: any) => {
+  const handleSubmit = async (recipe: Omit<Recipe, '_id' | 'createdAt' | 'updatedAt'>) => {
     setIsSubmitting(true);
     try {
       const createdRecipe = await createRecipe(recipe);
-      navigate(`/recipes/${createdRecipe._id}`);
+      showToast('Recipe saved successfully!', 'success');
+      // Redirect to the recipes page with the selected category
+      navigate(`/recipes/category/${recipe.categoryId}`);
     } catch (error) {
       console.error('Error creating recipe:', error);
+      showToast('Failed to save recipe. Please try again.', 'error');
       setIsSubmitting(false);
     }
   };

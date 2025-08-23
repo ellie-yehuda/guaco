@@ -259,9 +259,10 @@ async def parse_recipe(input_data: RecipeTextInput):
     # Create and return recipe
     recipe = RecipeIn(
         title=title,
+        categoryId=category_id,
         ingredients=ingredients,
         steps=steps,
-        categoryId=category_id,
+        servings=1,  # Default to 1 serving
         tags=tags if tags else None
     )
     

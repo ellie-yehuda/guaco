@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
 from typing import List, Optional
 from datetime import datetime, date
-from ..models.track_event import TrackEvent
-from ..repositories.factory import get_repository
+from models.track_event import TrackEvent
+from repositories.factory import get_repository
+
 
 router = APIRouter(
     prefix="/api/track",
