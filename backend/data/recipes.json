@@ -124,5 +124,57 @@
     "_id": "bfffa59f-fb0b-4b1d-ab36-d874e1e5e380",
     "createdAt": "2025-08-23 12:24:51.309608",
     "updatedAt": "2025-08-23 12:24:51.309608"
+  },
+  {
+    "title": "pancake recipe",
+    "categoryId": "6420a14c-bf1f-48af-958d-cf3bb63b75ed",
+    "servings": 1,
+    "nutrition": null,
+    "ingredients": [
+      {
+        "name": "pancake recipe",
+        "amount": null
+      }
+    ],
+    "steps": [
+      "Gather all ingredients needed for pancake recipe.",
+      "Prepare the pancake recipe according to your preferred recipe.",
+      "Cook until done and serve your pancake recipe!"
+    ],
+    "tags": null,
+    "_id": "9a528d4a-8884-4dbe-a955-b76ca20af5fc",
+    "createdAt": "2025-08-23 18:40:41.065543",
+    "updatedAt": "2025-08-23 18:40:41.065543"
+  },
+  {
+    "title": "Spinach and Potato Hash with Caramelized Onions",
+    "categoryId": "75da73e9-89c4-45ff-8a86-1c42bd9d9700",
+    "servings": 1,
+    "nutrition": null,
+    "ingredients": [
+      {
+        "name": "medium potatoes (about 900g)",
+        "amount": "4"
+      },
+      {
+        "name": "large onion (about 150g)",
+        "amount": "1"
+      },
+      {
+        "name": "s of fresh spinach (about 90g)",
+        "amount": "3 cup"
+      }
+    ],
+    "steps": [
+      "Peel and dice the potatoes into small cubes. Thinly slice the onion.",
+      "Heat a tablespoon of olive oil in a large skillet over medium heat. Add the onions, stirring occasionally until they turn a deep brown color, about 15 minutes.",
+      "In another skillet, heat a tablespoon of olive oil. Add the diced potatoes, salt, pepper, garlic powder, and paprika. Cook over medium heat until potatoes are golden brown and crispy, about 20 minutes.",
+      "Add the caramelized onions to the skillet with potatoes. Stir in the spinach until it wilts, about 2 minutes.",
+      "Serve the hash warm."
+    ],
+    "tags": [],
+    "_id": "f89af7be-7906-4661-9a61-f9c299b0c367",
+    "createdAt": "2025-08-23 18:42:12.683772",
+    "updatedAt": "2025-08-23 18:42:12.683772"
   }
 ]

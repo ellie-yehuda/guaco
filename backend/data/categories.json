@@ -14,5 +14,37 @@
     "_id": "6420a14c-bf1f-48af-958d-cf3bb63b75ed",
     "createdAt": "2025-08-23 09:55:01.804545",
     "updatedAt": "2025-08-23 09:55:01.804545"
+  },
+  {
+    "name": "Dinner",
+    "slug": "dinner",
+    "sort": null,
+    "_id": "13aa9a6a-7557-4e87-a7e3-2d84659a0868",
+    "createdAt": "2025-08-23 18:40:49.898074",
+    "updatedAt": "2025-08-23 18:40:49.898074"
+  },
+  {
+    "name": "Healthy-snacks",
+    "slug": "healthy-snacks",
+    "sort": null,
+    "_id": "05274089-ac02-4293-a116-e613611ba555",
+    "createdAt": "2025-08-23 18:40:54.586479",
+    "updatedAt": "2025-08-23 18:40:54.586479"
+  },
+  {
+    "name": "Desserts",
+    "slug": "desserts",
+    "sort": null,
+    "_id": "0399226f-9661-4c1c-a8bc-27b244aca029",
+    "createdAt": "2025-08-23 18:40:59.532163",
+    "updatedAt": "2025-08-23 18:40:59.532163"
+  },
+  {
+    "name": "Breakfast",
+    "slug": "breakfast",
+    "sort": null,
+    "_id": "75da73e9-89c4-45ff-8a86-1c42bd9d9700",
+    "createdAt": "2025-08-23 18:41:00.858910",
+    "updatedAt": "2025-08-23 18:41:00.858910"
   }
 ]

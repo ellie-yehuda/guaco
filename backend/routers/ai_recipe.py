@@ -35,6 +35,22 @@ def extract_ingredients(text: str) -> List[Ingredient]:
     """Extract ingredients from text"""
     ingredients = []
     
+    # Handle simple recipe requests like "pancake" or "something for dinner"
+    simple_request_match = re.match(r'^[\w\s]+(for\s+\w+)?$', text.strip(), re.IGNORECASE)
+    if simple_request_match:
+        # This is a simple request, create a default ingredient
+        food_item = text.strip().lower()
+        # Remove phrases like "for dinner", "for lunch", etc.
+        food_item = re.sub(r'\s+for\s+\w+$', '', food_item)
+        
+        # Handle common recipe types
+        if food_item in ["recipe", "meal", "food", "dish", "something"]:
+            ingredients.append(Ingredient(name="basic ingredients"))
+            return ingredients
+            
+        ingredients.append(Ingredient(name=food_item))
+        return ingredients
+    
     # Look for ingredients section
     ingredients_section_patterns = [
         r'(?:Ingredients?:?)(.*?)(?:Instructions|Directions|Method|Steps|Preparation|$)',
@@ -84,6 +100,23 @@ def extract_ingredients(text: str) -> List[Ingredient]:
                 if ingredient_text and len(ingredient_text) < 100:  # Sanity check
                     ingredients.append(parse_ingredient(ingredient_text))
     
+    # If we still don't have ingredients, extract words that might be food items
+    if not ingredients:
+        # Extract potential food items (words that are not common stop words)
+        words = re.findall(r'\b[a-zA-Z]+\b', text.lower())
+        food_words = [word for word in words if len(word) > 2 and word not in [
+            "the", "and", "for", "with", "that", "this", "make", "from", "recipe", "want", "need", "like", 
+            "some", "create", "generate", "please", "would", "could", "should", "using", "have", "has"
+        ]]
+        
+        if food_words:
+            # Use the first few words as ingredients
+            for word in food_words[:3]:
+                ingredients.append(Ingredient(name=word))
+        else:
+            # Last resort: add a generic ingredient
+            ingredients.append(Ingredient(name="basic ingredients"))
+    
     # Remove duplicates while preserving order
     seen = set()
     unique_ingredients = []
@@ -115,6 +148,29 @@ def parse_ingredient(text: str) -> Ingredient:
 def extract_steps(text: str) -> List[str]:
     """Extract preparation steps from text"""
     steps = []
+    
+    # Handle simple recipe requests like "pancake" or "something for dinner"
+    simple_request_match = re.match(r'^[\w\s]+(for\s+\w+)?$', text.strip(), re.IGNORECASE)
+    if simple_request_match:
+        # This is a simple request, create default steps
+        food_item = text.strip().lower()
+        # Remove phrases like "for dinner", "for lunch", etc.
+        food_item = re.sub(r'\s+for\s+\w+$', '', food_item)
+        
+        # Handle common recipe types with generic steps
+        if food_item in ["recipe", "meal", "food", "dish", "something"]:
+            return [
+                "Prepare all ingredients according to the recipe requirements.",
+                "Follow the cooking instructions for the specific dish you're making.",
+                "Serve and enjoy your meal!"
+            ]
+            
+        # Create steps for the specific food item
+        return [
+            f"Gather all ingredients needed for {food_item}.",
+            f"Prepare the {food_item} according to your preferred recipe.",
+            f"Cook until done and serve your {food_item}!"
+        ]
     
     # Look for instructions section
     instructions_section_patterns = [
@@ -164,6 +220,23 @@ def extract_steps(text: str) -> List[str]:
                 # Skip likely non-instruction sentences
                 if not re.search(r'(ingredient|cup|tbsp|tsp|oz|lb|g|kg|ml|l)', sentence, re.IGNORECASE):
                     steps.append(sentence)
+    
+    # If we still don't have steps, create generic ones based on the text
+    if not steps:
+        # Extract potential food items
+        food_words = re.findall(r'\b[a-zA-Z]{3,}\b', text.lower())
+        food_words = [word for word in food_words if word not in [
+            "the", "and", "for", "with", "that", "this", "make", "from", "recipe", "want", "need", "like", 
+            "some", "create", "generate", "please", "would", "could", "should", "using", "have", "has"
+        ]]
+        
+        food_item = food_words[0] if food_words else "dish"
+        
+        steps = [
+            f"Gather all ingredients for your {food_item}.",
+            f"Prepare the {food_item} according to standard cooking practices.",
+            f"Cook until done and serve your {food_item}!"
+        ]
     
     # Combine very short steps
     combined_steps = []
