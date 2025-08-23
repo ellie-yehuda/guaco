@@ -16,6 +16,8 @@ export function Card({
     );
   }
   
+export default Card;
+  
   export function CardHeader({
     children,
     className = "",

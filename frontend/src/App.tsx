@@ -10,7 +10,11 @@ import { Suspense, lazy } from "react";
 // Lazy load some pages for performance
 const LazyGroceryList = lazy(() => import("./pages/GroceryList"));
 const LazyRecipes = lazy(() => import("./pages/Recipes"));
+const LazyRecipeNew = lazy(() => import("./pages/RecipeNew"));
+const LazyRecipeAI = lazy(() => import("./pages/RecipeAI"));
+const LazyRecipeDetail = lazy(() => import("./pages/RecipeDetail"));
 const LazyTracker = lazy(() => import("./pages/Tracker"));
+const LazyAssistant = lazy(() => import("./pages/Assistant"));
 
 // Loading fallback for lazy loaded components
 const LoadingFallback = () => (
@@ -47,10 +51,42 @@ export default function App() {
               } 
             />
             <Route 
+              path="/recipes/new" 
+              element={
+                <Suspense fallback={<LoadingFallback />}>
+                  <LazyRecipeNew />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/recipes/ai" 
+              element={
+                <Suspense fallback={<LoadingFallback />}>
+                  <LazyRecipeAI />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/recipes/:id" 
+              element={
+                <Suspense fallback={<LoadingFallback />}>
+                  <LazyRecipeDetail />
+                </Suspense>
+              } 
+            />
+            <Route 
               path="/tracker" 
               element={
                 <Suspense fallback={<LoadingFallback />}>
                   <LazyTracker />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/assistant" 
+              element={
+                <Suspense fallback={<LoadingFallback />}>
+                  <LazyAssistant />
                 </Suspense>
               } 
             />

@@ -1,69 +1,103 @@
-import React, { useState } from "react";
-import { Button } from "./ui/Button";
+import { useState } from 'react';
+import Button from './ui/Button';
+import Input from './ui/Input';
 
-// Simple Modal implementation
-const Modal: React.FC<{ open: boolean; onClose: () => void; children: React.ReactNode }> = ({ open, onClose, children }) => {
-  if (!open) return null;
+type WaterFormData = {
+  qty?: number;
+  unit?: string;
+};
+
+interface TrackWaterModalProps {
+  onClose: () => void;
+  onSave: (data: WaterFormData) => void;
+}
+
+const TrackWaterModal = ({ onClose, onSave }: TrackWaterModalProps) => {
+  const [formData, setFormData] = useState<WaterFormData>({
+    qty: 250,
+    unit: 'ml',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: name === 'unit' ? value : parseFloat(value) || 0,
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  // Predefined water amounts
+  const quickAmounts = [100, 250, 500, 750, 1000];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-gradient-to-t from-black/60 to-transparent transition-opacity duration-300">
-      <div className="relative w-full bg-white rounded-t-3xl shadow-lg p-6 transform transition-transform duration-300 ease-out translate-y-0 opacity-100">
-        <button
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none text-2xl"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          &times;
-        </button>
-        {children}
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold">Add Water</h3>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="qty" className="block text-sm font-medium text-gray-700">
+                Amount
+              </label>
+              <Input
+                id="qty"
+                name="qty"
+                type="number"
+                value={formData.qty}
+                onChange={handleChange}
+                required
+                min="0"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Quick Select
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {quickAmounts.map(amount => (
+                  <button
+                    key={amount}
+                    type="button"
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      formData.qty === amount
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 hover:bg-gray-200'
+                    }`}
+                    onClick={() => setFormData({ ...formData, qty: amount })}
+                  >
+                    {amount} ml
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-6 flex justify-end space-x-3">
+            <Button type="button" onClick={onClose} variant="outline">
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary">
+              Save
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
-interface TrackWaterModalProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}
-
-const TrackWaterModal: React.FC<TrackWaterModalProps> = ({ open, setOpen }) => {
-  const [cups, setCups] = useState(0);
-
-  const handleLog = () => {
-    // handle log logic here
-    setOpen(false);
-    setCups(0);
-  };
-
-  return (
-    <Modal open={open} onClose={() => setOpen(false)}>
-      <div className="bg-white rounded-xl p-6 pb-20 w-full max-w-sm mx-auto">
-        <h2 className="text-xl font-bold mb-2">Log Water Intake</h2>
-        <p className="text-gray-500 mb-4">How many cups of water did you drink?</p>
-        <div className="flex items-center justify-center space-x-4 mb-6">
-          <Button
-            className="px-4 py-2 rounded-full bg-sky-100 text-sky-600 hover:bg-sky-200 focus:ring-2 focus:ring-sky-400 text-xl font-bold"
-            onClick={() => setCups(c => Math.max(0, c - 1))}
-            aria-label="Decrease cups"
-            variant="outline"
-          >-</Button>
-          <span className="text-4xl font-bold text-sky-700">{cups}</span>
-          <Button
-            className="px-4 py-2 rounded-full bg-sky-100 text-sky-600 hover:bg-sky-200 focus:ring-2 focus:ring-sky-400 text-xl font-bold"
-            onClick={() => setCups(c => c + 1)}
-            aria-label="Increase cups"
-            variant="outline"
-          >+</Button>
-        </div>
-        <Button
-          className="w-full bg-sky-500 text-white font-bold py-3 rounded-xl hover:bg-sky-600 focus:ring-2 focus:ring-sky-400 text-lg shadow-md"
-          onClick={handleLog}
-        >
-          Log Water
-        </Button>
-      </div>
-    </Modal>
-  );
-};
-
-export default TrackWaterModal; 
+export default TrackWaterModal;

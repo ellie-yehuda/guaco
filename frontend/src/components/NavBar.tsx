@@ -58,7 +58,7 @@ export default function NavBar({ name, handleLogout }: NavBarProps) {
 
         {/* Avocado tab (center, big, floating) */}
         <button
-          onClick={() => navigate('/home')}
+          onClick={() => navigate('/assistant')}
           className="relative z-10 flex flex-col items-center justify-center mx-4 group"
         >
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-200 shadow-lg border-4 border-white flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:shadow-xl">

@@ -67,9 +67,17 @@ class LocalJsonRepository(BaseRepository[T]):
         """Get an item by ID"""
         data = await self._read_data()
         for item in data:
-            if item.get("_id") == id:
+            if item.get("_id") == id or item.get("id") == id:
                 return item
         return None
+        
+    async def get_by_id(self, id: str) -> Optional[Dict]:
+        """Get an item by ID (alias for get)"""
+        return await self.get(id)
+        
+    async def get_all(self) -> List[Dict]:
+        """Get all items in the collection"""
+        return await self._read_data()
     
     async def list(self, filter_params: Dict[str, Any] = None) -> List[Dict]:
         """List items with optional filtering"""

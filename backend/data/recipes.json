@@ -1,11 +1,128 @@
-{
-  "lunch": [
-    {
-      "title": "Roasted Potatoes and Sweet Potatoes  ",
-      "summary": "A recipe created using: Potatoes, Sweet potatoes, olive oil",
-      "category": "lunch",
-      "instructions": "Title: Roasted Potatoes and Sweet Potatoes  \nPrep Time: 10 minutes  \nCook Time: 30 minutes  \nIngredients:  \n\u2022 2 medium potatoes, diced  \n\u2022 2 medium sweet potatoes, diced  \n\u2022 2 tbsp olive oil  \n\u2022 1 tsp salt  \n\u2022 \u00bd tsp black pepper  \nInstructions:  \n1. Preheat the oven to 400\u00b0F (200\u00b0C).  \n2. In a large bowl, toss the diced potatoes and sweet potatoes with olive oil, salt, and black pepper until evenly coated.  \n3. Spread the potatoes on a baking sheet lined with parchment paper in a single layer.  \n4. Roast in the preheated oven for 30 minutes, or until the potatoes are tender and golden brown, flipping halfway through.  \n5. Serve hot as a delicious side dish.",
-      "id": "1"
-    }
-  ]
-}
+[
+  {
+    "title": "Ingredients",
+    "ingredients": [
+      {
+        "name": "Dough",
+        "amount": null
+      },
+      {
+        "name": "and 3/4 cups (344g) all-purpose flour (spooned & leveled), plus more as needed",
+        "amount": "2"
+      },
+      {
+        "name": "(50g) granulated sugar",
+        "amount": "1/4 cup"
+      },
+      {
+        "name": "salt",
+        "amount": "1/2 teaspoon"
+      },
+      {
+        "name": "(180ml) whole milk",
+        "amount": "3/4 cup"
+      },
+      {
+        "name": "(43g) unsalted butter",
+        "amount": "3 Tablespoons"
+      },
+      {
+        "name": "and 1/4 teaspoons Platinum Yeast from Red Star or any instant yeast (1 standard packet)",
+        "amount": "2"
+      },
+      {
+        "name": "large egg, at room temperature",
+        "amount": "1"
+      },
+      {
+        "name": "Filling",
+        "amount": null
+      },
+      {
+        "name": "(43g) unsalted butter, extra softened",
+        "amount": "3 Tablespoons"
+      },
+      {
+        "name": "(67g) packed light or dark brown sugar",
+        "amount": "1/3 cup"
+      },
+      {
+        "name": "ground cinnamon",
+        "amount": "1 Tablespoon"
+      },
+      {
+        "name": "Cream Cheese Icing",
+        "amount": null
+      },
+      {
+        "name": "(113g) full-fat block cream cheese, softened to room temperature",
+        "amount": "4 ounces"
+      },
+      {
+        "name": "(28g) unsalted butter, softened to room temperature",
+        "amount": "2 Tablespoons"
+      },
+      {
+        "name": "(80g) confectioners\u2019 sugar",
+        "amount": "2/3 cup"
+      },
+      {
+        "name": "pure vanilla extract",
+        "amount": "1 teaspoon"
+      },
+      {
+        "name": "Cook Mode Prevent your screen from going dark",
+        "amount": null
+      }
+    ],
+    "steps": [
+      "Make the dough: Whisk the flour, sugar, and salt together in a large bowl. Set aside.",
+      "Combine the milk and butter together in a heatproof bowl. Microwave or use the stove and heat until the butter has melted and the mixture is warm to the touch (about 110\u00b0F/43\u00b0C, no higher). Whisk in the yeast until it has dissolved. Pour mixture into the dry ingredients, add the egg, and stir with a sturdy rubber spatula or wooden spoon OR use a stand mixer with a paddle attachment on medium speed. Mix until a soft dough forms.",
+      "Transfer dough to a lightly floured surface. Using floured hands, knead the dough for 3-5 minutes. You should have a smooth ball of dough. If the dough is super soft or sticky, you can add a little more flour. Place in a lightly greased bowl (I use non-stick spray), cover loosely, and let the dough rest for about 10 minutes as you get the filling ingredients ready.",
+      "Fill the rolls: After 10 minutes, roll the dough out in a 14\u00d78-inch (36\u00d720-cm) rectangle. Spread the softened butter on top. Mix together the cinnamon and brown sugar. Sprinkle it all over the dough. Roll up the dough to make a 14-inch log. Cut into 10\u201312 even rolls and arrange in a lightly greased 9- or 10-inch round cake pan, pie dish, or square baking pan.",
+      "Rise: Cover the pan with aluminum foil, plastic wrap, or a clean kitchen towel. Allow the rolls to rise in a relatively warm environment for 60\u201390 minutes or until double in size. (For a tiny reduction in rise time, see my answer to Where Should Dough Rise? in my Baking with Yeast Guide.)",
+      "Bake the rolls: After the rolls have doubled in size, preheat the oven to 375\u00b0F (190\u00b0C). Bake for 24\u201327 minutes, or until lightly browned. If you notice the tops are getting too brown too quickly, loosely tent the pan with aluminum foil and continue baking. If you want to be precise about their doneness, their internal temperature taken with an instant read thermometer should be around 195\u2013200\u00b0F (91\u201393\u00b0C) when done. Remove pan from the oven and place pan on a wire rack as you make the icing. (You can also make the icing as the rolls bake.)",
+      "Make the icing: In a medium bowl using a handheld or stand mixer fitted with a paddle or whisk attachment, beat the cream cheese on high speed until smooth and creamy. Add the butter and beat until smooth and combined, then beat in the confectioners\u2019 sugar and vanilla until combined. Using a knife or icing spatula, spread the icing over the warm rolls and serve immediately.",
+      "Cover leftover frosted or unfrosted rolls tightly and store at room temperature for up to 2 days or in the refrigerator for up to 5 days."
+    ],
+    "categoryId": "65eea3e9-184b-4acd-9f2f-5e3cd6923471",
+    "tags": [
+      "quick",
+      "sugar",
+      "tasty",
+      "michal"
+    ],
+    "_id": "a5bbe145-6fd0-46c6-ac52-9fb152f002bf",
+    "createdAt": "2025-08-23 12:13:47.107892",
+    "updatedAt": "2025-08-23 12:13:47.107892"
+  },
+  {
+    "title": "Savory Pork Chops and Potato Hash",
+    "ingredients": [
+      {
+        "name": "medium-sized potatoes (600g)",
+        "amount": "4"
+      },
+      {
+        "name": "pork chops (600g)",
+        "amount": "4"
+      },
+      {
+        "name": "large onion (150g)",
+        "amount": "1"
+      }
+    ],
+    "steps": [
+      "Preheat your pan over medium heat and add olive oil.",
+      "Season pork chops with salt, pepper, and garlic powder on both sides.",
+      "Once the pan is hot, cook pork chops for about 4-5 minutes on each side, until they are golden brown and cooked through. Remove from pan and set aside.",
+      "In the same pan, add the potatoes and onion. Season with rosemary, salt, and pepper. Cook for about 15-20 minutes, until the potatoes are golden and crispy.",
+      "Serve the pork chops with the potato hash, garnish with additional rosemary if desired."
+    ],
+    "categoryId": "65eea3e9-184b-4acd-9f2f-5e3cd6923471",
+    "tags": [],
+    "_id": "bfffa59f-fb0b-4b1d-ab36-d874e1e5e380",
+    "createdAt": "2025-08-23 12:24:51.309608",
+    "updatedAt": "2025-08-23 12:24:51.309608"
+  }
+]

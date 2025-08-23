@@ -31,15 +31,41 @@ class MongoRepository(BaseRepository[T]):
     async def get(self, id: str) -> Optional[Dict]:
         """Get an item by ID"""
         try:
-            object_id = ObjectId(id)
-            item = await self.collection.find_one({"_id": object_id})
+            # Try to find by MongoDB ObjectId
+            try:
+                object_id = ObjectId(id)
+                item = await self.collection.find_one({"_id": object_id})
+                if item:
+                    # Convert ObjectId to string for serialization
+                    item["_id"] = str(item["_id"])
+                    return item
+            except Exception:
+                pass
+            
+            # If not found or invalid ObjectId, try to find by string id
+            item = await self.collection.find_one({"id": id})
             if item:
-                # Convert ObjectId to string for serialization
                 item["_id"] = str(item["_id"])
                 return item
+                
             return None
         except Exception:
             return None
+            
+    async def get_by_id(self, id: str) -> Optional[Dict]:
+        """Get an item by ID (alias for get)"""
+        return await self.get(id)
+        
+    async def get_all(self) -> List[Dict]:
+        """Get all items in the collection"""
+        cursor = self.collection.find({})
+        items = await cursor.to_list(length=1000)  # Limit to 1000 items for safety
+        
+        # Convert ObjectId to string for each item
+        for item in items:
+            item["_id"] = str(item["_id"])
+        
+        return items
     
     async def list(self, filter_params: Dict[str, Any] = None) -> List[Dict]:
         """List items with optional filtering"""

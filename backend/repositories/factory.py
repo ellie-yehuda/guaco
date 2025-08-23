@@ -40,3 +40,7 @@ class RepositoryFactory:
 
 # Singleton factory instance
 repository_factory = RepositoryFactory()
+
+def get_repository(collection_name: str) -> BaseRepository:
+    """Convenience function to get a repository for a collection"""
+    return repository_factory.get_repository(collection_name)

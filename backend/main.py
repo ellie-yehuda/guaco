@@ -8,7 +8,9 @@ import os
 from pathlib import Path
 
 # Import routers
-from routers import recipes_router
+from routers import recipes
+from routers import ai_recipe
+from routers import track
 
 class FoodItem(BaseModel):
     name: str
@@ -127,7 +129,9 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(recipes_router)
+app.include_router(recipes.router)
+app.include_router(ai_recipe.router)
+app.include_router(track.router)
 
 
 # Path to store recipes

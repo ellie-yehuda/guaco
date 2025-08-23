@@ -47,7 +47,11 @@ const RecipesContent = () => {
   }, [activeCategory, navigate]);
 
   const handleAddNewRecipe = () => {
-    navigate('/add-recipe');
+    navigate('/recipes/new');
+  };
+  
+  const handleAddRecipeWithAI = () => {
+    navigate('/recipes/ai');
   };
 
   return (
@@ -56,16 +60,25 @@ const RecipesContent = () => {
       <div className="pointer-events-none absolute -top-24 -left-40 h-[28rem] w-[28rem] rounded-full bg-gradient-to-tr from-teal-400/40 via-green-300/40 to-transparent blur-3xl opacity-50" />
       <div className="pointer-events-none absolute -bottom-24 -right-40 h-[28rem] w-[28rem] rounded-full bg-gradient-to-bl from-purple-400/40 via-fuchsia-300/40 to-transparent blur-3xl opacity-50" />
 
-      {/* Add New Recipe Button directly on background */}
-      <div className="absolute top-6 right-24 z-20">
+      {/* Add Recipe Buttons directly on background */}
+      <div className="absolute top-6 right-24 z-20 flex space-x-4">
+        <Button
+          onClick={handleAddRecipeWithAI}
+          className="flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 text-white rounded-full
+            hover:shadow-lg hover:shadow-fuchsia-300 transition-all duration-200 transform hover:scale-105
+            focus:outline-none focus:ring-2 focus:ring-fuchsia-400 focus:ring-offset-2"
+        >
+          <span className="mr-2">✨</span>
+          AI Recipe
+        </Button>
         <Button
           onClick={handleAddNewRecipe}
           className="flex items-center px-6 py-3 bg-gradient-to-r from-teal-500 via-emerald-500 to-green-500 text-white rounded-full
             hover:shadow-lg hover:shadow-emerald-300 transition-all duration-200 transform hover:scale-105
             focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
         >
-          <span className="mr-2">✨</span>
-          Add New Recipe
+          <span className="mr-2">+</span>
+          Add Recipe
         </Button>
       </div>
 
@@ -104,15 +117,26 @@ const RecipesContent = () => {
             <h2 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 via-teal-500 to-green-400 bg-clip-text text-transparent drop-shadow-sm">
               {categories.find(c => c.id === activeCategory)?.name} Recipes
             </h2>
-            <Button
-              onClick={handleAddNewRecipe}
-              variant="outline"
-              className="flex items-center px-4 py-2 text-emerald-700 border-2 border-emerald-300 rounded-lg
-                hover:bg-emerald-50 transition-all duration-200"
-            >
-              <span className="mr-2">+</span>
-              Add Recipe
-            </Button>
+            <div className="flex space-x-2">
+              <Button
+                onClick={handleAddRecipeWithAI}
+                variant="outline"
+                className="flex items-center px-4 py-2 text-fuchsia-700 border-2 border-fuchsia-300 rounded-lg
+                  hover:bg-fuchsia-50 transition-all duration-200"
+              >
+                <span className="mr-2">✨</span>
+                AI Recipe
+              </Button>
+              <Button
+                onClick={handleAddNewRecipe}
+                variant="outline"
+                className="flex items-center px-4 py-2 text-emerald-700 border-2 border-emerald-300 rounded-lg
+                  hover:bg-emerald-50 transition-all duration-200"
+              >
+                <span className="mr-2">+</span>
+                Add Recipe
+              </Button>
+            </div>
           </div>
           {/* Recipe List Component */}
           <ErrorBoundary fallback={
