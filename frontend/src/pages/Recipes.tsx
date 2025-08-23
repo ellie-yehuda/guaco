@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useRecipes, RecipeProvider } from '../context/RecipeContext';
 import RecipeList from '../components/RecipeList';
+import ErrorBoundary from '../components/ErrorBoundary';
 import { Button } from "../components/ui/Button";
 
 /**
@@ -114,7 +115,16 @@ const RecipesContent = () => {
             </Button>
           </div>
           {/* Recipe List Component */}
-          <RecipeList categoryId={activeCategory} />
+          <ErrorBoundary fallback={
+            <div className="text-center py-8">
+              <p className="text-red-600 mb-4">Failed to load recipes. Please try again later.</p>
+              <Button onClick={() => fetchRecipes(activeCategory)} className="bg-emerald-500 text-white">
+                Retry
+              </Button>
+            </div>
+          }>
+            <RecipeList categoryId={activeCategory} />
+          </ErrorBoundary>
         </div>
       </main>
     </div>

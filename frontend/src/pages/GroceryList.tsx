@@ -27,7 +27,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 import DetailedNutrition from '../components/DetailedNutrition';
 import RecipeLoader from '../components/RecipeLoader';
-import { Recipe } from '../types/Recipe';
+import { Recipe as RecipeType, Ingredient as IngredientType } from '../types/Recipe';
+import { recipesApi } from '../utils/recipesApi';
+import { useToast } from '../context/ToastContext';
 
 /* --------------------------- 1. Data sources ------------------------------ */
 import { getCategory, getSuggestions } from "../utils/categoryUtils";
@@ -197,7 +199,7 @@ export default function GroceryList() {
   const [isSelectingIngredients, setIsSelectingIngredients] = useState(false);
   const navigate = useNavigate();
   const [isSaveRecipeModalOpen, setSaveRecipeModalOpen] = useState(false);
-  const [recipeToSave, setRecipeToSave] = useState<Recipe | null>(null);
+  const [recipeToSave, setRecipeToSave] = useState<RecipeType | null>(null);
   const [showDetailedNutrition, setShowDetailedNutrition] = useState(false);
   const [newUnit, setNewUnit] = useState("units");
   const unitOptions = ["units", "g", "ml", "oz", "lb", "kg", "liters", "units", "package", "6 pack", "dozen"];
@@ -212,41 +214,66 @@ export default function GroceryList() {
     { id: 'desserts', name: 'Desserts', icon: '🍰' }
   ];
 
+  const { showToast } = useToast();
+
   const handleSaveRecipe = async (categoryId: string) => {
     if (!recipeToSave) return;
 
     try {
-      const response = await fetch('http://localhost:8000/api/recipes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: recipeToSave.title,
-          summary: recipeToSave.summary,
-          category: categoryId,
-          instructions: recipeToSave.instructions
-        }),
+      // First, ensure the category exists
+      const category = await recipesApi.createCategory({
+        name: recipeCategories.find(c => c.id === categoryId)?.name || categoryId,
+        slug: categoryId
       });
 
-      if (response.ok) {
-        setSaveRecipeModalOpen(false);
-        setRecipeToSave(null);
-        // Navigate to the recipes page in the selected category
-        navigate(`/recipes/category/${categoryId}`);
-      } else {
-        alert('Failed to save recipe. Please try again.');
-      }
+      // Parse ingredients from the text format
+      const ingredientLines = recipeToSave.ingredients?.split('\n').filter(Boolean) || [];
+      const parsedIngredients: IngredientType[] = ingredientLines.map(line => {
+        const cleanLine = line.replace(/^•\s*/, '').trim();
+        const match = cleanLine.match(/^([\d.\/\s]+\s*(?:g|ml|oz|lb|kg|cup|tbsp|tsp|teaspoon|tablespoon)?)?\s*(.+)$/i);
+        
+        if (match && match[2]) {
+          return {
+            amount: match[1]?.trim() || undefined,
+            name: match[2].trim()
+          };
+        }
+        return { name: cleanLine };
+      });
+
+      // Parse steps from the instructions
+      const steps = recipeToSave.instructions
+        .split(/\d+\./)
+        .map(step => step.trim())
+        .filter(Boolean);
+
+      // Create the recipe
+      const newRecipe = await recipesApi.createRecipe({
+        title: recipeToSave.title,
+        ingredients: parsedIngredients,
+        steps: steps,
+        categoryId: category._id || categoryId,
+        tags: []
+      });
+
+      setSaveRecipeModalOpen(false);
+      setRecipeToSave(null);
+      showToast('Recipe saved successfully!', 'success');
+      
+      // Stay on the grocery list page instead of navigating away
+      setIsRecipeModalOpen(false);
+      // If we want to navigate later, use this:
+      // navigate(`/recipes/category/${categoryId}`);
     } catch (error) {
       console.error('Error saving recipe:', error);
-      alert('Failed to save recipe. Please try again.');
+      showToast('Failed to save recipe. Please try again.', 'error');
     }
   };
 
   // generate recipe from ingredients
   const generateRecipe = async () => {
     if (selectedItemIds.length < 3) {
-      alert("Please select at least 3 ingredients to generate a recipe.");
+      showToast("Please select at least 3 ingredients to generate a recipe.", "error");
       return;
     }
 
@@ -259,14 +286,13 @@ export default function GroceryList() {
     console.log("Generating recipe with ingredients:", ingredientsToGenerate);
 
     try {
+      // Check if OpenAI API key is configured
       const response = await fetch("http://localhost:8000/api/generate_recipe_from_ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        mode: "cors",
-        credentials: "include",
         body: JSON.stringify({ ingredients: ingredientsToGenerate }),
       });
       
@@ -289,14 +315,14 @@ export default function GroceryList() {
       const recipeData = {
         title: data.title || 'Generated Recipe',
         summary: `Recipe generated from: ${ingredientsToGenerate.join(', ')}`,
-        instructions: data.instructions,
-        ingredients: data.ingredients,
-        spices: data.spices,
-        prep_time: data.prep_time,
-        cook_time: data.cook_time,
-        servings: data.servings,
-        nutrition: data.nutrition,
-        full_text: data.full_text
+        instructions: data.instructions || '',
+        ingredients: data.ingredients || '',
+        spices: data.spices || '',
+        prep_time: data.prep_time || '15',
+        cook_time: data.cook_time || '20',
+        servings: data.servings || 4,
+        nutrition: data.nutrition || {},
+        full_text: data.full_text || ''
       };
 
       console.log("Nutrition Data:", recipeData.nutrition);
@@ -309,7 +335,7 @@ export default function GroceryList() {
       }
     } catch (error: any) {
       console.error("Error generating recipe:", error);
-      alert(`Failed to generate recipe: ${error.message}`);
+      showToast(`Failed to generate recipe: ${error.message}. Please check if OpenAI API key is configured correctly.`, "error");
     } finally {
       setIsGeneratingRecipe(false);
     }
@@ -498,7 +524,7 @@ export default function GroceryList() {
 
   /* --------------------------- 5. Render --------------------------------- */
   return (
-    <div className="relative isolate min-h-screen overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50 pb-32">
+    <div className="relative isolate min-h-screen overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50 pb-safe">
       {/* Decorative blurred blob */}
       <div className="pointer-events-none absolute -top-24 -left-40 h-[28rem] w-[28rem] rounded-full bg-gradient-to-tr from-teal-400/40 via-green-300/40 to-transparent blur-3xl" />
 
@@ -592,26 +618,28 @@ export default function GroceryList() {
 
         {/* ===== Active items by category ======================================= */}
         <motion.div layout className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-6 space-y-6">
-          <div className="flex justify-between mb-4">
-            <button
-              onClick={handleGenerateRecipeClick}
-              disabled={isSelectingIngredients && isGenerateRecipeButtonDisabled}
-              className={`px-6 py-3 rounded-full text-white font-semibold transition-all duration-200
-                ${isSelectingIngredients && isGenerateRecipeButtonDisabled
-                  ? 'bg-gray-300 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:brightness-110 shadow-lg'
-                }`}
-            >
-              {isSelectingIngredients ? `Select Ingredients (${selectedItemIds.length}/3)` : 'Generate Recipe'}
-            </button>
-            {isSelectingIngredients && (
+          <div className="sticky bottom-safe-sm z-40 bg-white/90 backdrop-blur-md py-3 px-4 -mx-6 border-t border-emerald-100 mb-4">
+            <div className="flex justify-between">
               <button
-                onClick={handleCancelSelection}
-                className="ml-4 px-6 py-3 rounded-full bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-all duration-200"
+                onClick={handleGenerateRecipeClick}
+                disabled={isSelectingIngredients && isGenerateRecipeButtonDisabled}
+                className={`px-6 py-3 rounded-full text-white font-semibold transition-all duration-200
+                  ${isSelectingIngredients && isGenerateRecipeButtonDisabled
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:brightness-110 shadow-lg'
+                  }`}
               >
-                Cancel
+                {isSelectingIngredients ? `Select Ingredients (${selectedItemIds.length}/3)` : 'Generate Recipe'}
               </button>
-            )}
+              {isSelectingIngredients && (
+                <button
+                  onClick={handleCancelSelection}
+                  className="ml-4 px-6 py-3 rounded-full bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-all duration-200"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Empty state */}
@@ -965,7 +993,7 @@ export default function GroceryList() {
               </div>
 
               {/* Fixed bottom buttons */}
-              <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 rounded-b-3xl flex gap-3 mt-auto">
+              <div className="sticky bottom-safe-sm bg-white border-t border-gray-200 p-4 rounded-b-3xl flex gap-3 mt-auto">
                 <button
                   onClick={() => generateRecipe()}
                   disabled={isGeneratingRecipe}

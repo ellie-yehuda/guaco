@@ -1,10 +1,14 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Union, Optional
 from services.chat_generate_recipes import generate_recipe_from_ingredients
 import json
+import os
 from pathlib import Path
+
+# Import routers
+from routers import recipes_router
 
 class FoodItem(BaseModel):
     name: str
@@ -122,6 +126,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include routers
+app.include_router(recipes_router)
+
 
 # Path to store recipes
 RECIPES_FILE = Path("data/recipes.json")
@@ -204,6 +211,21 @@ def get_recipes(category: str):
 @app.get("/api/hello")
 def hello():
     return {"message": "Hello from FastAPI!"}
+
+@app.get("/api/grocery-data/csv")
+def get_grocery_csv():
+    csv_path = Path(__file__).parent / "data" / "GroceryDataset" / "GroceryDataset4Guaco.csv"
+    
+    # Read the file content
+    with open(csv_path, "rb") as file:
+        content = file.read()
+    
+    # Return the file content with appropriate headers
+    return Response(
+        content=content,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=GroceryDataset4Guaco.csv"}
+    )
 
 @app.post("/api/food")
 def add_food(food: FoodItem):

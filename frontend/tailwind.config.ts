@@ -79,5 +79,29 @@ export default {
       sans: ['Manrope', 'Inter', 'sans-serif'],
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.safe-bottom': {
+          paddingBottom: 'env(safe-area-inset-bottom)'
+        },
+        '.pb-safe': {
+          paddingBottom: 'calc(88px + env(safe-area-inset-bottom))'
+        },
+        '.mb-safe': {
+          marginBottom: 'calc(88px + env(safe-area-inset-bottom))'
+        },
+        '.mb-safe-lg': {
+          marginBottom: 'calc(88px + env(safe-area-inset-bottom) + 24px)'
+        },
+        '.bottom-safe': {
+          bottom: 'calc(88px + env(safe-area-inset-bottom))'
+        },
+        '.bottom-safe-sm': {
+          bottom: 'calc(88px + env(safe-area-inset-bottom) + 12px)'
+        }
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 };

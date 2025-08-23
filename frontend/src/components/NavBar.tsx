@@ -42,7 +42,7 @@ export default function NavBar({ name, handleLogout }: NavBarProps) {
   const rightTabs = tabs.slice(2);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 w-full bg-white shadow-lg pt-2 pb-4 px-4">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 w-full bg-white shadow-lg pt-2 pb-4 px-4 safe-bottom">
       <div className="flex justify-around items-center h-full">
         {/* Left tabs */}
         {leftTabs.map(tab => (

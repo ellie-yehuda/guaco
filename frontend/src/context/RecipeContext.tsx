@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
+import { Recipe as RecipeType } from '../types/Recipe';
+import { recipesApi } from '../utils/recipesApi';
 
 export interface Recipe {
   id: string;
   title: string;
-  summary: string;
+  summary?: string;
   category: string;
 }
 
@@ -32,19 +34,43 @@ export const RecipeProvider = ({ children }: RecipeProviderProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchRecipes = async (categoryId: string) => {
+    if (!categoryId) return;
+    
     setIsLoading(true);
-    // Placeholder for API call or data fetching logic
-    console.log(`Fetching recipes for category: ${categoryId}`);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500));
-    setRecipes(prev => ({
-      ...prev,
-      [categoryId]: [
-        { id: '1', title: 'Spicy Tofu Stir-fry', summary: 'Quick and healthy stir-fry with tofu and vegetables.', category: categoryId },
-        { id: '2', title: 'Lentil Soup', summary: 'Hearty and nutritious soup, perfect for a cold day.', category: categoryId },
-      ],
-    }));
-    setIsLoading(false);
+    try {
+      console.log(`Fetching recipes for category: ${categoryId}`);
+      
+      // First, ensure the category exists
+      const category = await recipesApi.createCategory({
+        name: categoryId.charAt(0).toUpperCase() + categoryId.slice(1),
+        slug: categoryId
+      });
+      
+      // Fetch recipes for this category
+      const categoryRecipes = await recipesApi.listRecipesByCategory(category._id || categoryId);
+      
+      // Map to our internal Recipe format
+      const formattedRecipes = categoryRecipes.map(recipe => ({
+        id: recipe._id || '',
+        title: recipe.title,
+        summary: recipe.steps.length > 0 ? recipe.steps[0] : undefined,
+        category: categoryId
+      }));
+      
+      setRecipes(prev => ({
+        ...prev,
+        [categoryId]: formattedRecipes,
+      }));
+    } catch (error) {
+      console.error(`Error fetching recipes for category ${categoryId}:`, error);
+      // Set empty array for this category to avoid showing loading state forever
+      setRecipes(prev => ({
+        ...prev,
+        [categoryId]: [],
+      }));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const value = {

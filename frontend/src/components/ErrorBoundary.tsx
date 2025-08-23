@@ -1,4 +1,4 @@
-import { Component, ErrorInfo, ReactNode } from "react";
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -7,47 +7,36 @@ interface Props {
 
 interface State {
   hasError: boolean;
-  error: Error | null;
+  error?: Error;
 }
 
 class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
+  public state: State = {
+    hasError: false
+  };
 
-  static getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: Error): State {
+    // Update state so the next render will show the fallback UI.
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Uncaught error:', error, errorInfo);
   }
 
-  render(): ReactNode {
+  public render() {
     if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-      
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-          <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-md">
-            <div className="text-center">
-              <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-                Something went wrong
-              </h2>
-              <p className="mt-2 text-sm text-gray-600">
-                {this.state.error?.message || "An error occurred"}
-              </p>
-              <button
-                onClick={() => window.location.href = '/'}
-                className="mt-6 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >
-                Go to Home Page
-              </button>
-            </div>
-          </div>
+      // You can render any custom fallback UI
+      return this.props.fallback || (
+        <div className="p-8 text-center bg-red-50 rounded-xl">
+          <h2 className="text-xl font-bold text-red-700 mb-2">Something went wrong</h2>
+          <p className="text-red-600 mb-4">{this.state.error?.message || 'An error occurred'}</p>
+          <button
+            onClick={() => this.setState({ hasError: false })}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Try again
+          </button>
         </div>
       );
     }
@@ -56,4 +45,4 @@ class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-export default ErrorBoundary; 
+export default ErrorBoundary;

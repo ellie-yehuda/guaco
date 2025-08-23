@@ -18,7 +18,7 @@ const Layout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-100 to-white text-gray-900 font-sans flex flex-col pb-32">
+    <div className="min-h-screen bg-gradient-to-br from-primary-100 to-white text-gray-900 font-sans flex flex-col pb-safe">
       <NavBar name={name} handleLogout={handleLogout} />
       <TopDropdown />
       <Outlet />

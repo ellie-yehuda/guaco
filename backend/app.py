@@ -1,14 +1,12 @@
-from flask import Flask, jsonify, request, send_file
-from flask_cors import CORS
+from fastapi import FastAPI, Response
+from fastapi.middleware.cors import CORSMiddleware
 import os
+from pathlib import Path
 
-app = Flask(__name__)
-CORS(app)
+# This file is now deprecated. All functionality has been moved to main.py
+# Keeping this file for reference purposes only
 
-@app.route('/api/grocery-data/csv', methods=['GET'])
-def get_grocery_csv():
-    csv_path = os.path.join(os.path.dirname(__file__), 'data', 'GroceryDataset', 'GroceryDataset4Guaco.csv')
-    return send_file(csv_path, mimetype='text/csv')
-
-if __name__ == '__main__':
-    app.run(debug=True, port=8000) 
+"""
+To run the application, use:
+uvicorn main:app --reload --port 8000
+""" 

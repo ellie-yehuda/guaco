@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Lunch",
+    "slug": "lunch",
+    "sort": null,
+    "_id": "65eea3e9-184b-4acd-9f2f-5e3cd6923471",
+    "createdAt": "2025-08-23 09:39:10.005451",
+    "updatedAt": "2025-08-23 09:39:10.005451"
+  },
+  {
+    "name": "Sugary-snacks",
+    "slug": "sugary-snacks",
+    "sort": null,
+    "_id": "6420a14c-bf1f-48af-958d-cf3bb63b75ed",
+    "createdAt": "2025-08-23 09:55:01.804545",
+    "updatedAt": "2025-08-23 09:55:01.804545"
+  }
+]
