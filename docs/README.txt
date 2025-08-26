@@ -24,7 +24,7 @@
 
 ## Demo
 
-[![Watch a 60-sec walkthrough](docs/demo.gif)](https://youtu.be/placeholder)
+[Watch the Website Demo](https://guaco-ashy.vercel.app/)
 
 ---
 
