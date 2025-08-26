@@ -4,7 +4,7 @@
 > Help anyone build lasting nutrition & wellness routines through AI-powered recipes, friction-free logging, and playful gamification.
 
 ---
-**Replace** the UPPER-CASE placeholders (<GITHUB_USER>, <REPO>, <VERCEL_ORG>, <VERCEL_PROJECT>) with your actual names
+(almog_miron, guaco)
 <!---- Badges ––––––––––––––––––––––––––––––––––––––––––––––––––––––-->
 [![Build](https://img.shields.io/github/actions/workflow/status/<almog.ai>/<REPO>/ci.yml?branch=main&label=CI%20build&logo=github)](https://github.com/<almog.ai>/<REPO>/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?logo=opensourceinitiative)](LICENSE)
