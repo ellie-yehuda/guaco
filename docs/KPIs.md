@@ -1,6 +1,6 @@
 North Star:
 
-Weekly Active Meal Planners (WAMP): users who generate ≥1 recipe and add it to a day in a given week. (Why: reflects the “plan → act” loop, not just browsing.)
+Weekly Active Meal Planners (WAMP): users who generate ≥1 recipe/daily plan in a given week. (Why: reflects the “plan → act” loop, not just browsing.)
 
 Activation & Engagement:
 
